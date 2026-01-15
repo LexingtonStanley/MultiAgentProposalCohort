@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohort Armoury Services - Executive Summary</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-elevated: #1a1a25;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --purple: #bf5fff;
+            --green: #00ff88;
+            --yellow: #ffff00;
+            --red: #ff3366;
+            --orange: #ff8800;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border: #2a2a3a;
+            --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.3);
+            --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-dark);
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        @media print {
+            body { padding: 20px; max-width: 100%; background: #0a0a0f; }
+            .page-break { page-break-before: always; }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--cyan) 0%, var(--magenta) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--magenta);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--cyan);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            text-shadow: var(--glow-cyan);
+        }
+
+        h3 { font-size: 1.3rem; color: var(--magenta); margin-top: 25px; margin-bottom: 15px; }
+        h4 { font-size: 1.1rem; color: var(--purple); margin-top: 20px; margin-bottom: 10px; }
+        p { margin-bottom: 15px; font-size: 1.05rem; color: var(--text-secondary); }
+
+        .subtitle { font-size: 1.4rem; color: var(--text-muted); margin-bottom: 30px; }
+
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .card-cyan { border-left: 4px solid var(--cyan); box-shadow: var(--glow-cyan); }
+        .card-magenta { border-left: 4px solid var(--magenta); box-shadow: var(--glow-magenta); }
+        .card-green { border-left: 4px solid var(--green); }
+        .card-yellow { border-left: 4px solid var(--yellow); }
+        .card-purple { border-left: 4px solid var(--purple); }
+
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
+
+        @media (max-width: 768px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95rem; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg-elevated); color: var(--cyan); font-weight: 600; }
+        tr:nth-child(even) { background: var(--bg-card); }
+        td { color: var(--text-secondary); }
+
+        /* Feature boxes */
+        .feature-box {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-box:hover {
+            border-color: var(--cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .feature-box .feature-icon { font-size: 2.5rem; margin-bottom: 15px; }
+        .feature-box h4 { color: var(--cyan); font-size: 1.2rem; margin-bottom: 10px; margin-top: 0; }
+        .feature-box p { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+
+        /* Mermaid - dark theme */
+        .mermaid {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            border: 1px solid var(--border);
+        }
+
+        /* Callout */
+        .callout {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--cyan);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .callout-icon { font-size: 1.5rem; }
+        .callout-content { flex: 1; }
+        .callout-content strong { color: var(--cyan); }
+
+        .callout-magenta { border-color: var(--magenta); box-shadow: var(--glow-magenta); }
+        .callout-magenta strong { color: var(--magenta); }
+
+        .callout-green { border-color: var(--green); box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
+        .callout-green strong { color: var(--green); }
+
+        /* Highlight box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0,255,255,0.1) 0%, rgba(255,0,255,0.1) 100%);
+            border: 2px solid var(--cyan);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .highlight-box h4 { color: var(--cyan); margin-top: 0; }
+
+        .highlight-box-magenta {
+            background: linear-gradient(135deg, rgba(255,0,255,0.1) 0%, rgba(191,95,255,0.1) 100%);
+            border-color: var(--magenta);
+            box-shadow: var(--glow-magenta);
+        }
+        .highlight-box-magenta h4 { color: var(--magenta); }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-cyan { background: rgba(0,255,255,0.2); color: var(--cyan); border: 1px solid var(--cyan); }
+        .badge-magenta { background: rgba(255,0,255,0.2); color: var(--magenta); border: 1px solid var(--magenta); }
+        .badge-green { background: rgba(0,255,136,0.2); color: var(--green); border: 1px solid var(--green); }
+        .badge-yellow { background: rgba(255,255,0,0.2); color: var(--yellow); border: 1px solid var(--yellow); }
+        .badge-red { background: rgba(255,51,102,0.2); color: var(--red); border: 1px solid var(--red); }
+        .badge-purple { background: rgba(191,95,255,0.2); color: var(--purple); border: 1px solid var(--purple); }
+
+        /* Score bars */
+        .score-bar {
+            height: 30px;
+            background: var(--bg-elevated);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+        }
+
+        .score-fill {
+            height: 100%;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 15px;
+            color: var(--bg-dark);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .score-fill.hot { background: linear-gradient(90deg, var(--magenta), var(--red)); }
+        .score-fill.warm { background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+
+        /* Dashboard mock */
+        .dashboard-mock {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .dashboard-title { font-weight: bold; font-size: 1.1rem; color: var(--cyan); }
+
+        .dashboard-section {
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .dashboard-section h5 {
+            color: var(--magenta);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .dashboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dashboard-item:last-child { border-bottom: none; }
+        .dashboard-item .item-title { font-weight: 500; color: var(--text-primary); }
+        .dashboard-item .item-meta { color: var(--text-muted); font-size: 0.85rem; }
+
+        .dashboard-btn {
+            background: var(--cyan);
+            color: var(--bg-dark);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .dashboard-btn.secondary { background: var(--bg-card); color: var(--cyan); border: 1px solid var(--cyan); }
+        .dashboard-btn.warning { background: var(--yellow); color: var(--bg-dark); }
+
+        /* Stat boxes */
+        .stat-box {
+            background: var(--bg-elevated);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-box .icon { font-size: 2rem; margin-bottom: 8px; }
+        .stat-box .value { font-size: 1.5rem; font-weight: bold; color: var(--cyan); }
+        .stat-box .label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+
+        /* Lists */
+        ul { margin: 15px 0; padding-left: 25px; }
+        li { margin-bottom: 8px; color: var(--text-secondary); }
+        li::marker { color: var(--cyan); }
+
+        /* Image gen flow */
+        .neon-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding: 30px;
+            background: var(--bg-elevated);
+            border-radius: 16px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+        }
+
+        .neon-box {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            min-width: 130px;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .neon-box.cyan { border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+        .neon-box.magenta { border-color: var(--magenta); box-shadow: var(--glow-magenta); }
+        .neon-box.green { border-color: var(--green); box-shadow: 0 0 20px rgba(0,255,136,0.3); }
+        .neon-box.purple { border-color: var(--purple); box-shadow: 0 0 20px rgba(191,95,255,0.3); }
+
+        .neon-box .neon-icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .neon-box .neon-label { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
+        .neon-box .neon-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; }
+
+        .neon-arrow { font-size: 1.5rem; color: var(--magenta); }
+
+        /* Steps */
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            color: var(--bg-dark);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 { margin: 0 0 5px 0; color: var(--cyan); }
+        .step-content p { margin: 0; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1a1a25',
+                primaryTextColor: '#00ffff',
+                primaryBorderColor: '#00ffff',
+                lineColor: '#ff00ff',
+                secondaryColor: '#12121a',
+                tertiaryColor: '#0a0a0f',
+                background: '#0a0a0f',
+                mainBkg: '#1a1a25',
+                nodeBorder: '#00ffff',
+                clusterBkg: '#12121a',
+                clusterBorder: '#ff00ff',
+                titleColor: '#00ffff',
+                edgeLabelBackground: '#12121a'
+            }
+        });
+    </script>
+
+    <div class="header-meta">
+        <div class="logo">COHORT ARMOURY SERVICES</div>
+        <span class="badge badge-cyan">Executive Summary v3.0</span>
+    </div>
+
+    <h1>Intelligent Lead Generation & Marketing System</h1>
+    <p class="subtitle">A Complete Business Development Solution</p>
+
+    <h2>What We're Building</h2>
+
+    <p>A single intelligent system that handles three core business needs:</p>
+
+    <div class="grid-3">
+        <div class="feature-box">
+            <div class="feature-icon">🔍</div>
+            <h4>Find Work</h4>
+            <p>Automatically discover productions from IMDb Pro, Variety, Deadline, LinkedIn, and more. Score and prioritize the best opportunities.</p>
+        </div>
+        <div class="feature-box">
+            <div class="feature-icon">📧</div>
+            <h4>Win Work</h4>
+            <p>Draft personalized outreach, track responses, manage follow-ups. Never miss a lead or forget to follow up.</p>
+        </div>
+        <div class="feature-box">
+            <div class="feature-icon">📱</div>
+            <h4>Market the Business</h4>
+            <p>Generate AI-powered marketing images from product photos. Create and schedule social content automatically.</p>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <h4>🎯 One Point of Contact</h4>
+        <p style="margin: 0; color: var(--text-secondary);">Instead of juggling multiple tools, you interact with <strong style="color: var(--cyan);">one intelligent assistant</strong> - the Cohort Orchestrator. It understands your requests and coordinates 15 specialist AI agents working behind the scenes.</p>
+    </div>
+
+    <h2>The Complete System</h2>
+
+    <div class="mermaid">
+    flowchart TB
+        subgraph You["👤 YOU"]
+            Dashboard["Single Dashboard"]
+        end
+
+        subgraph Orchestrator["🎯 COHORT ORCHESTRATOR"]
+            Brain["Your Intelligent Assistant"]
+        end
+
+        subgraph Sources["📥 DATA SOURCES"]
+            S1["IMDb Pro"]
+            S2["Variety / Deadline"]
+            S3["LinkedIn"]
+            S4["Production Weekly"]
+        end
+
+        subgraph Clusters["🤖 SPECIALIST TEAMS"]
+            Lead["🔍 LEAD INTEL\n4 Agents"]
+            Outreach["📧 OUTREACH\n3 Agents"]
+            Marketing["📱 MARKETING\n8 Agents"]
+        end
+
+        Dashboard <--> Brain
+        Sources --> Lead
+        Brain <--> Lead
+        Brain <--> Outreach
+        Brain <--> Marketing
+
+        style Brain fill:#ff00ff,stroke:#ff00ff,color:#000
+        style Dashboard fill:#00ffff,stroke:#00ffff,color:#000
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2>Lead Sources - Not Just IMDb</h2>
+
+    <p>The system monitors <strong style="color: var(--cyan);">multiple sources</strong> to find opportunities:</p>
+
+    <div class="grid-3">
+        <div class="card card-cyan">
+            <h4 style="color: var(--cyan); margin-top: 0;">🎬 Production Databases</h4>
+            <ul>
+                <li><strong>IMDb Pro</strong> - Productions in development/pre-production</li>
+                <li><strong>Production Weekly</strong> - Greenlit projects newsletter</li>
+                <li><strong>The Knowledge</strong> - UK crew database</li>
+            </ul>
+        </div>
+        <div class="card card-magenta">
+            <h4 style="color: var(--magenta); margin-top: 0;">📰 Industry News</h4>
+            <ul>
+                <li><strong>Variety</strong> - Announcements & greenlights</li>
+                <li><strong>Deadline</strong> - Production news</li>
+                <li><strong>Screen Daily</strong> - UK/EU focus</li>
+                <li><strong>Broadcast Magazine</strong> - TV commissions</li>
+            </ul>
+        </div>
+        <div class="card card-purple">
+            <h4 style="color: var(--purple); margin-top: 0;">💼 Social & Professional</h4>
+            <ul>
+                <li><strong>LinkedIn</strong> - Company activity, job posts</li>
+                <li><strong>Twitter/X</strong> - Industry chatter</li>
+                <li><strong>Film Commissions</strong> - Regional databases</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>Function 1: Find Work</h2>
+
+    <div class="card card-cyan">
+        <h4 style="color: var(--cyan); margin-top: 0;">What It Does Automatically</h4>
+        <div class="grid-2" style="margin-top: 15px;">
+            <div>
+                <p style="color: var(--magenta);"><strong>Daily Scanning:</strong></p>
+                <ul style="margin: 5px 0;">
+                    <li>IMDb Pro for new productions</li>
+                    <li>News sites for announcements</li>
+                    <li>LinkedIn for production activity</li>
+                    <li>Trade publications for greenlights</li>
+                </ul>
+            </div>
+            <div>
+                <p style="color: var(--magenta);"><strong>Smart Scoring (0-100):</strong></p>
+                <ul style="margin: 5px 0;">
+                    <li>Genre (Action/War/Crime = high)</li>
+                    <li>Location (UK = bonus)</li>
+                    <li>Budget (higher = better)</li>
+                    <li>Timing (pre-production = ideal)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h3>Lead Scoring Example</h3>
+
+    <div class="grid-2">
+        <div class="card">
+            <h4 style="color: var(--red); margin-top: 0;">🔥 Hot Lead: WW2 Drama</h4>
+            <table style="margin: 10px 0;">
+                <tr><td>War genre</td><td style="text-align: right; color: var(--green);">+35</td></tr>
+                <tr><td>UK production</td><td style="text-align: right; color: var(--green);">+25</td></tr>
+                <tr><td>High budget</td><td style="text-align: right; color: var(--green);">+18</td></tr>
+                <tr><td>Pre-production</td><td style="text-align: right; color: var(--green);">+20</td></tr>
+                <tr style="background: rgba(255,0,255,0.2);"><td><strong style="color: var(--text-primary);">Total</strong></td><td style="text-align: right;"><strong style="color: var(--magenta);">98/100</strong></td></tr>
+            </table>
+            <div class="score-bar">
+                <div class="score-fill hot" style="width: 98%;">98 - Contact Now!</div>
+            </div>
+        </div>
+        <div class="card">
+            <h4 style="color: var(--text-muted); margin-top: 0;">❄️ Cold Lead: Rom-Com</h4>
+            <table style="margin: 10px 0;">
+                <tr><td>Romance genre</td><td style="text-align: right; color: var(--text-muted);">+0</td></tr>
+                <tr><td>UK production</td><td style="text-align: right; color: var(--green);">+25</td></tr>
+                <tr><td>Low budget</td><td style="text-align: right; color: var(--yellow);">+10</td></tr>
+                <tr><td>Pre-production</td><td style="text-align: right; color: var(--green);">+20</td></tr>
+                <tr><td><strong>Total</strong></td><td style="text-align: right;"><strong>55/100</strong></td></tr>
+            </table>
+            <p style="color: var(--text-muted); margin: 0; text-align: center;">Unlikely to need armoury - monitor only</p>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2>Function 2: Win Work</h2>
+
+    <div class="card card-magenta">
+        <h4 style="color: var(--magenta); margin-top: 0;">Automated Outreach Pipeline</h4>
+        <div class="mermaid">
+        sequenceDiagram
+            participant S as 🤖 System
+            participant Y as 👤 You
+            participant C as 📧 Contact
+
+            Note over S: Hot lead found!
+            S->>S: Finds contacts (Line Producer, Prop Master)
+            S->>S: Drafts personalized email
+            S->>Y: "Email ready - approve?"
+            Y->>S: ✅ Approved
+            S->>C: Sends email
+
+            Note over S: 3 days later
+            S->>S: Email opened 4 times!
+            S->>S: Drafts follow-up
+            S->>Y: "High interest! Follow-up ready"
+            Y->>S: ✅ Approved
+            S->>C: Sends follow-up
+
+            Note over S: Day 5
+            C->>S: Reply received!
+            S->>Y: "Sarah replied!"
+        </div>
+    </div>
+
+    <div class="callout callout-green">
+        <div class="callout-icon">✅</div>
+        <div class="callout-content">
+            <strong>You Stay in Control:</strong> The system drafts everything, but nothing sends without your approval. Edit, reject, or approve with one click.
+        </div>
+    </div>
+
+    <h2>Function 3: Market the Business</h2>
+
+    <p>Three types of content, all automated:</p>
+
+    <div class="grid-3">
+        <div class="card" style="text-align: center; border-top: 3px solid var(--purple);">
+            <div style="font-size: 3rem;">🤖</div>
+            <h4 style="color: var(--purple);">AI-Generated Images</h4>
+            <p>White background products → stunning marketing images</p>
+        </div>
+        <div class="card" style="text-align: center; border-top: 3px solid var(--green);">
+            <div style="font-size: 3rem;">🎬</div>
+            <h4 style="color: var(--green);">Field Content</h4>
+            <p>BTS photos from set, equipment, team moments</p>
+        </div>
+        <div class="card" style="text-align: center; border-top: 3px solid var(--cyan);">
+            <div style="font-size: 3rem;">✍️</div>
+            <h4 style="color: var(--cyan);">Written Content</h4>
+            <p>Educational posts, industry commentary, product descriptions</p>
+        </div>
+    </div>
+
+    <h3>🤖 AI Image Generation</h3>
+
+    <div class="neon-flow">
+        <div class="neon-box cyan">
+            <div class="neon-icon">📷</div>
+            <div class="neon-label">Product Photo</div>
+            <div class="neon-desc">White background</div>
+        </div>
+        <div class="neon-arrow">→</div>
+        <div class="neon-box purple">
+            <div class="neon-icon">🤖</div>
+            <div class="neon-label">AI Model</div>
+            <div class="neon-desc">Brand-trained</div>
+        </div>
+        <div class="neon-arrow">→</div>
+        <div class="neon-box magenta">
+            <div class="neon-icon">🎨</div>
+            <div class="neon-label">Variations</div>
+            <div class="neon-desc">3-4 options</div>
+        </div>
+        <div class="neon-arrow">→</div>
+        <div class="neon-box green">
+            <div class="neon-icon">✅</div>
+            <div class="neon-label">You Select</div>
+            <div class="neon-desc">Best one wins</div>
+        </div>
+    </div>
+
+    <div class="highlight-box-magenta">
+        <h4>🔮 What the AI Can Do</h4>
+        <div class="grid-2" style="margin-top: 15px;">
+            <div>
+                <p style="color: var(--cyan);"><strong>Single Product:</strong></p>
+                <ul style="margin: 5px 0;">
+                    <li>Victorian study setting</li>
+                    <li>Dark dramatic studio</li>
+                    <li>Medieval armoury</li>
+                    <li>Clean gradient backdrop</li>
+                </ul>
+            </div>
+            <div>
+                <p style="color: var(--cyan);"><strong>Multiple Products:</strong></p>
+                <ul style="margin: 5px 0;">
+                    <li>Sword + scabbard + belt together</li>
+                    <li>Complete weapon sets</li>
+                    <li>Themed collections</li>
+                    <li>Cohesive product placement</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h3>📱 Field Content from Your Team</h3>
+
+    <p>Your team of <strong style="color: var(--cyan);">8-15 armourers</strong> can easily contribute:</p>
+
+    <div class="callout">
+        <div class="callout-icon">💡</div>
+        <div class="callout-content">
+            <strong>For Armourers:</strong> "During downtime on set, capture a few photos - equipment setups, detail shots, candid moments. Upload via web form or shared folder. The system handles the rest."
+        </div>
+    </div>
+
+    <div class="grid-3">
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2.5rem;">🌐</div>
+            <h4 style="color: var(--cyan);">Web Upload</h4>
+            <p>Simple drag & drop</p>
+        </div>
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2.5rem;">📁</div>
+            <h4 style="color: var(--cyan);">Shared Folder</h4>
+            <p>Google Drive / Dropbox</p>
+        </div>
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2.5rem;">📧</div>
+            <h4 style="color: var(--cyan);">Email Upload</h4>
+            <p>Send to upload address</p>
+        </div>
+    </div>
+
+    <h2>Your Daily Experience</h2>
+
+    <p>Every morning, spend <strong style="color: var(--cyan);">5-10 minutes</strong> reviewing what the system prepared:</p>
+
+    <div class="dashboard-mock">
+        <div class="dashboard-header">
+            <div class="dashboard-title">🎯 COHORT COMMAND CENTER</div>
+            <span class="badge badge-green">System Active</span>
+        </div>
+
+        <div class="grid-4" style="margin-bottom: 20px;">
+            <div class="stat-box">
+                <div class="icon">🔥</div>
+                <div class="value">3</div>
+                <div class="label">Hot Leads</div>
+            </div>
+            <div class="stat-box">
+                <div class="icon">📧</div>
+                <div class="value" style="color: var(--magenta);">5</div>
+                <div class="label">Emails Ready</div>
+            </div>
+            <div class="stat-box">
+                <div class="icon">📱</div>
+                <div class="value" style="color: var(--purple);">4</div>
+                <div class="label">Posts to Review</div>
+            </div>
+            <div class="stat-box">
+                <div class="icon">📸</div>
+                <div class="value" style="color: var(--green);">2</div>
+                <div class="label">Field Content</div>
+            </div>
+        </div>
+
+        <div class="dashboard-section">
+            <h5>🔥 Hot Leads (from IMDb Pro, Variety, LinkedIn)</h5>
+            <div class="dashboard-item">
+                <div>
+                    <div class="item-title">⚡ WW2 Drama (BBC Films)</div>
+                    <div class="item-meta">Source: IMDb Pro | Pre-Production | Pinewood</div>
+                </div>
+                <div>
+                    <span class="badge badge-red" style="margin-right: 8px;">Score: 92</span>
+                    <button class="dashboard-btn">Contact</button>
+                </div>
+            </div>
+            <div class="dashboard-item">
+                <div>
+                    <div class="item-title">⚡ Crime Thriller (Netflix)</div>
+                    <div class="item-meta">Source: Deadline | Development | London</div>
+                </div>
+                <div>
+                    <span class="badge badge-yellow" style="margin-right: 8px;">Score: 87</span>
+                    <button class="dashboard-btn">Contact</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-section">
+            <h5>📧 Outreach Queue</h5>
+            <div class="dashboard-item">
+                <div>
+                    <div class="item-title">Email to Sarah Mitchell (Line Producer)</div>
+                    <div class="item-meta">Re: WW2 Drama - Personalized intro</div>
+                </div>
+                <div>
+                    <button class="dashboard-btn secondary">Preview</button>
+                    <button class="dashboard-btn">Approve</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-section">
+            <h5>📱 Content Ready</h5>
+            <div class="dashboard-item">
+                <div>
+                    <div class="item-title">LinkedIn: Educational post + AI image</div>
+                    <div class="item-meta">Topic: Flintlock mechanisms</div>
+                </div>
+                <div>
+                    <button class="dashboard-btn secondary">Preview</button>
+                    <button class="dashboard-btn">Approve</button>
+                </div>
+            </div>
+            <div class="dashboard-item">
+                <div>
+                    <div class="item-title">Instagram: BTS from active production</div>
+                    <div class="item-meta">⚠️ Requires human review</div>
+                </div>
+                <div>
+                    <button class="dashboard-btn warning">Review</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2>Expected Results</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Without System</th>
+                <th>With System</th>
+                <th>Improvement</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Leads found per week</td>
+                <td>2-5 (manual)</td>
+                <td>15-30</td>
+                <td><span class="badge badge-green">5x more</span></td>
+            </tr>
+            <tr>
+                <td>Lead sources monitored</td>
+                <td>1-2</td>
+                <td>8+</td>
+                <td><span class="badge badge-green">Comprehensive</span></td>
+            </tr>
+            <tr>
+                <td>Time on admin</td>
+                <td>5-10 hrs/week</td>
+                <td>~1 hr/week</td>
+                <td><span class="badge badge-green">90% saved</span></td>
+            </tr>
+            <tr>
+                <td>Marketing images</td>
+                <td>Expensive shoots</td>
+                <td>AI on demand</td>
+                <td><span class="badge badge-green">Unlimited</span></td>
+            </tr>
+            <tr>
+                <td>Follow-up rate</td>
+                <td>Often forgotten</td>
+                <td>100%</td>
+                <td><span class="badge badge-green">Never miss</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Investment Summary</h2>
+
+    <div class="grid-2">
+        <div class="card card-cyan">
+            <h4 style="color: var(--cyan); margin-top: 0;">Build Phase (One-Time)</h4>
+            <ul>
+                <li>Database & infrastructure</li>
+                <li>15 AI agents development</li>
+                <li>Image generation model training</li>
+                <li>Dashboard interface</li>
+                <li>Upload mechanism</li>
+                <li>Social media integrations</li>
+            </ul>
+        </div>
+        <div class="card card-magenta">
+            <h4 style="color: var(--magenta); margin-top: 0;">Ongoing Costs (Monthly)</h4>
+            <table style="margin: 10px 0 0 0;">
+                <tr><td>Database hosting</td><td style="text-align: right;">£20-50</td></tr>
+                <tr><td>AI processing</td><td style="text-align: right;">£50-150</td></tr>
+                <tr><td>Image generation</td><td style="text-align: right;">£30-80</td></tr>
+                <tr><td>Email service</td><td style="text-align: right;">£20-50</td></tr>
+                <tr><td>IMDb Pro</td><td style="text-align: right;">~£150</td></tr>
+                <tr style="background: rgba(255,0,255,0.2);"><td><strong>Est. Total</strong></td><td style="text-align: right;"><strong style="color: var(--magenta);">£270-480/mo</strong></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <h2>Next Steps</h2>
+
+    <div class="step-item">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <h4>Review & Feedback</h4>
+            <p>Questions? Changes? Additional features?</p>
+        </div>
+    </div>
+    <div class="step-item">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <h4>Gather Brand Assets</h4>
+            <p>50-100 reference images for AI training, color palette, style preferences</p>
+        </div>
+    </div>
+    <div class="step-item">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <h4>Technical Build</h4>
+            <p>Database, agents, image model, dashboard</p>
+        </div>
+    </div>
+    <div class="step-item">
+        <div class="step-number">4</div>
+        <div class="step-content">
+            <h4>Testing & Launch</h4>
+            <p>Real data testing, refinement, go live</p>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <h4>🎯 The Bottom Line</h4>
+        <p style="color: var(--text-secondary);">One intelligent system with <strong style="color: var(--cyan);">15 AI specialists</strong> that:</p>
+        <ul>
+            <li><strong style="color: var(--cyan);">Finds</strong> opportunities from 8+ sources you'd never have time to monitor</li>
+            <li><strong style="color: var(--magenta);">Drafts</strong> personalized outreach that gets responses</li>
+            <li><strong style="color: var(--purple);">Creates</strong> professional marketing content on demand</li>
+            <li><strong style="color: var(--green);">Never forgets</strong> to follow up</li>
+        </ul>
+        <p style="margin-bottom: 0; color: var(--text-secondary);"><strong style="color: var(--yellow);">Your job:</strong> 10 minutes each morning clicking "Approve".</p>
+    </div>
+
+    <div style="margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted);">
+        <p><em>Prepared for Cohort Armoury Services</em></p>
+        <p><em>January 2024 | Version 3.0</em></p>
+        <p style="font-size: 0.9rem;"><strong style="color: var(--cyan);">To save as PDF:</strong> Open in browser → Ctrl+P → "Save as PDF"</p>
+    </div>
+
+</body>
+</html>

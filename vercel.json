@@ -1,0 +1,39 @@
+{
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/executive-summary",
+      "destination": "/cohort-executive-summary.html"
+    },
+    {
+      "source": "/agent-architecture",
+      "destination": "/cohort-agent-architecture.html"
+    },
+    {
+      "source": "/system-design",
+      "destination": "/cohort-system-design.html"
+    }
+  ]
+}

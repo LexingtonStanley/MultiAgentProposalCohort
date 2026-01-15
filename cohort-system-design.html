@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohort Armoury Services - Complete System Design</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050508;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --cyan: #00ffff;
+            --cyan-dim: #00cccc;
+            --magenta: #ff00ff;
+            --magenta-dim: #cc00cc;
+            --purple: #bf5fff;
+            --green: #00ff88;
+            --yellow: #ffff00;
+            --red: #ff3366;
+            --orange: #ff8800;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-dim: #666666;
+            --border-glow: 0 0 10px var(--cyan), 0 0 20px var(--cyan);
+            --border-glow-magenta: 0 0 10px var(--magenta), 0 0 20px var(--magenta);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Animated background grid */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--cyan-dim) 1px, transparent 1px),
+                linear-gradient(90deg, var(--cyan-dim) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            border: 1px solid var(--cyan);
+            border-radius: 10px;
+            box-shadow: var(--border-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(0, 255, 255, 0.1) 50%,
+                transparent 60%
+            );
+            animation: headerShine 3s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--cyan));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 3s linear infinite;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .header .subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .version {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--magenta);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Section styling */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+        }
+
+        .section.cyan-border {
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .section.magenta-border {
+            border-color: var(--magenta);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+        }
+
+        .section.purple-border {
+            border-color: var(--purple);
+            box-shadow: 0 0 15px rgba(191, 95, 255, 0.2);
+        }
+
+        .section.purple-border::before {
+            background: linear-gradient(90deg, var(--purple), var(--magenta));
+        }
+
+        .section.green-border {
+            border-color: var(--green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .section.green-border::before {
+            background: linear-gradient(90deg, var(--green), var(--cyan));
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title.cyan { color: var(--cyan); }
+        .section-title.magenta { color: var(--magenta); }
+        .section-title.purple { color: var(--purple); }
+        .section-title.green { color: var(--green); }
+        .section-title.yellow { color: var(--yellow); }
+        .section-title.orange { color: var(--orange); }
+
+        .section-title .icon {
+            font-size: 1.8rem;
+        }
+
+        /* Cluster cards */
+        .cluster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .cluster-card {
+            background: var(--bg-darker);
+            border: 1px solid var(--text-dim);
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .cluster-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--cyan);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+        }
+
+        .cluster-card.lead-intel { border-left: 4px solid var(--cyan); }
+        .cluster-card.outreach { border-left: 4px solid var(--magenta); }
+        .cluster-card.marketing { border-left: 4px solid var(--green); }
+
+        .cluster-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .cluster-card.lead-intel h3 { color: var(--cyan); }
+        .cluster-card.outreach h3 { color: var(--magenta); }
+        .cluster-card.marketing h3 { color: var(--green); }
+
+        .cluster-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cluster-card li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .cluster-card li:last-child {
+            border-bottom: none;
+        }
+
+        .cluster-card li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+        }
+
+        .cluster-card.lead-intel li::before { color: var(--cyan); }
+        .cluster-card.outreach li::before { color: var(--magenta); }
+        .cluster-card.marketing li::before { color: var(--green); }
+
+        /* Data source cards */
+        .source-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .source-card {
+            background: var(--bg-darker);
+            border: 1px solid var(--text-dim);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .source-card:hover {
+            border-color: var(--cyan);
+            transform: scale(1.02);
+        }
+
+        .source-card .source-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--cyan);
+            margin-bottom: 8px;
+        }
+
+        .source-card .source-type {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .source-card .source-data {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+
+        /* Database tables */
+        .db-table {
+            background: var(--bg-darker);
+            border: 1px solid var(--purple);
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .db-table-header {
+            background: linear-gradient(90deg, rgba(191, 95, 255, 0.3), rgba(255, 0, 255, 0.2));
+            padding: 15px 20px;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--purple);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .db-table-header .table-icon {
+            color: var(--magenta);
+        }
+
+        .db-table-body {
+            padding: 15px 20px;
+        }
+
+        .db-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .db-field:last-child {
+            border-bottom: none;
+        }
+
+        .db-field .field-name {
+            color: var(--cyan);
+        }
+
+        .db-field .field-type {
+            color: var(--text-dim);
+        }
+
+        .db-field.primary .field-name::after {
+            content: ' [PK]';
+            color: var(--yellow);
+            font-size: 0.75rem;
+        }
+
+        .db-field.foreign .field-name::after {
+            content: ' [FK]';
+            color: var(--magenta);
+            font-size: 0.75rem;
+        }
+
+        /* Flow diagrams */
+        .diagram-container {
+            background: var(--bg-darker);
+            border: 1px solid var(--text-dim);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 25px 0;
+            overflow-x: auto;
+        }
+
+        .diagram-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--magenta);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Mermaid diagram overrides */
+        .mermaid {
+            background: transparent !important;
+        }
+
+        .mermaid text {
+            fill: var(--text-primary) !important;
+        }
+
+        /* Pipeline stages */
+        .pipeline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pipeline-stage {
+            background: var(--bg-darker);
+            border: 2px solid var(--cyan);
+            border-radius: 8px;
+            padding: 15px 25px;
+            text-align: center;
+            min-width: 150px;
+            position: relative;
+        }
+
+        .pipeline-stage.magenta { border-color: var(--magenta); }
+        .pipeline-stage.purple { border-color: var(--purple); }
+        .pipeline-stage.green { border-color: var(--green); }
+        .pipeline-stage.yellow { border-color: var(--yellow); }
+
+        .pipeline-stage .stage-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--cyan);
+            margin-bottom: 5px;
+        }
+
+        .pipeline-stage.magenta .stage-name { color: var(--magenta); }
+        .pipeline-stage.purple .stage-name { color: var(--purple); }
+        .pipeline-stage.green .stage-name { color: var(--green); }
+        .pipeline-stage.yellow .stage-name { color: var(--yellow); }
+
+        .pipeline-stage .stage-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .pipeline-arrow {
+            font-size: 1.5rem;
+            color: var(--cyan);
+        }
+
+        /* Agent badges */
+        .agent-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            margin: 5px;
+        }
+
+        .agent-badge.cyan {
+            background: rgba(0, 255, 255, 0.15);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+        }
+
+        .agent-badge.magenta {
+            background: rgba(255, 0, 255, 0.15);
+            border: 1px solid var(--magenta);
+            color: var(--magenta);
+        }
+
+        .agent-badge.green {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid var(--green);
+            color: var(--green);
+        }
+
+        .agent-badge.purple {
+            background: rgba(191, 95, 255, 0.15);
+            border: 1px solid var(--purple);
+            color: var(--purple);
+        }
+
+        .agent-badge.yellow {
+            background: rgba(255, 255, 0, 0.15);
+            border: 1px solid var(--yellow);
+            color: var(--yellow);
+        }
+
+        /* Stats boxes */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: var(--bg-darker);
+            border: 1px solid var(--text-dim);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--cyan);
+            margin-bottom: 5px;
+        }
+
+        .stat-box.magenta .stat-value { color: var(--magenta); }
+        .stat-box.green .stat-value { color: var(--green); }
+        .stat-box.purple .stat-value { color: var(--purple); }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Info boxes */
+        .info-box {
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 4px solid var(--cyan);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box.magenta {
+            background: rgba(255, 0, 255, 0.05);
+            border-left-color: var(--magenta);
+        }
+
+        .info-box.green {
+            background: rgba(0, 255, 136, 0.05);
+            border-left-color: var(--green);
+        }
+
+        .info-box.yellow {
+            background: rgba(255, 255, 0, 0.05);
+            border-left-color: var(--yellow);
+        }
+
+        .info-box h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyan);
+            margin-bottom: 10px;
+        }
+
+        .info-box.magenta h4 { color: var(--magenta); }
+        .info-box.green h4 { color: var(--green); }
+        .info-box.yellow h4 { color: var(--yellow); }
+
+        .info-box p {
+            color: var(--text-secondary);
+        }
+
+        /* Two column layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        /* Scoring table */
+        .scoring-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .scoring-table th {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 12px 15px;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyan);
+            border-bottom: 2px solid var(--cyan);
+        }
+
+        .scoring-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        .scoring-table tr:hover td {
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .score-high { color: var(--green) !important; font-weight: bold; }
+        .score-med { color: var(--yellow) !important; }
+        .score-low { color: var(--red) !important; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 60px;
+            border-top: 1px solid var(--text-dim);
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .section { padding: 20px; }
+            .two-column { grid-template-columns: 1fr; }
+            .pipeline { flex-direction: column; }
+            .pipeline-arrow { transform: rotate(90deg); }
+        }
+
+        /* Code blocks */
+        code {
+            background: var(--bg-darker);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--green);
+            font-size: 0.9rem;
+        }
+
+        /* List styling */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .feature-list li::before {
+            content: '//';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>COMPLETE SYSTEM DESIGN</h1>
+            <div class="subtitle">COHORT ARMOURY SERVICES // AGENTIC PLATFORM</div>
+            <div class="version">VERSION 3.0 // TECHNICAL SPECIFICATION</div>
+        </div>
+
+        <!-- System Overview -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan"><span class="icon">&#9670;</span> SYSTEM OVERVIEW</h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 25px; font-size: 1.1rem;">
+                A fully integrated AI-powered platform comprising <span style="color: var(--cyan);">15 specialized agents</span>
+                organized into <span style="color: var(--magenta);">3 functional clusters</span>, orchestrated by a
+                <span style="color: var(--yellow);">single unified command interface</span>.
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">15</div>
+                    <div class="stat-label">AI Agents</div>
+                </div>
+                <div class="stat-box magenta">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Clusters</div>
+                </div>
+                <div class="stat-box green">
+                    <div class="stat-value">6+</div>
+                    <div class="stat-label">Data Sources</div>
+                </div>
+                <div class="stat-box purple">
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Control Point</div>
+                </div>
+            </div>
+
+            <div class="cluster-grid">
+                <div class="cluster-card lead-intel">
+                    <h3>LEAD INTELLIGENCE CLUSTER</h3>
+                    <ul>
+                        <li>IMDb Pro Production Monitoring</li>
+                        <li>Industry News Scanning (Variety, Deadline, Screen Daily)</li>
+                        <li>LinkedIn Professional Network Mining</li>
+                        <li>Production Weekly Analysis</li>
+                        <li>UK Film Commission Tracking</li>
+                        <li>Lead Scoring & Prioritization</li>
+                    </ul>
+                    <div style="margin-top: 15px;">
+                        <span class="agent-badge cyan">4 AGENTS</span>
+                    </div>
+                </div>
+
+                <div class="cluster-card outreach">
+                    <h3>OUTREACH CLUSTER</h3>
+                    <ul>
+                        <li>Personalized Email Generation</li>
+                        <li>Multi-touch Sequence Management</li>
+                        <li>Follow-up Automation</li>
+                        <li>Response Tracking & Analysis</li>
+                        <li>CRM Integration</li>
+                        <li>Relationship Nurturing</li>
+                    </ul>
+                    <div style="margin-top: 15px;">
+                        <span class="agent-badge magenta">3 AGENTS</span>
+                    </div>
+                </div>
+
+                <div class="cluster-card marketing">
+                    <h3>MARKETING SUITE CLUSTER</h3>
+                    <ul>
+                        <li>AI Image Generation from Product Photos</li>
+                        <li>Multi-product Scene Compositing</li>
+                        <li>Social Media Content Creation</li>
+                        <li>Field Content Processing</li>
+                        <li>Brand Style Enforcement</li>
+                        <li>Automated Posting & Scheduling</li>
+                    </ul>
+                    <div style="margin-top: 15px;">
+                        <span class="agent-badge green">8 AGENTS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Master Architecture Diagram -->
+        <div class="section magenta-border">
+            <h2 class="section-title magenta"><span class="icon">&#9656;</span> MASTER ARCHITECTURE</h2>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// UNIFIED ORCHESTRATION FLOW //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#00ffff', 'lineColor': '#ff00ff', 'secondaryColor': '#12121a', 'tertiaryColor': '#0a0a0f', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+flowchart TB
+    subgraph USER["USER INTERFACE"]
+        UI[("Dashboard")]
+        CMD["Command Input"]
+    end
+
+    subgraph ORCH["UNIFIED ORCHESTRATOR"]
+        MASTER["Master Orchestrator<br/>Agent"]
+    end
+
+    subgraph LEAD["LEAD INTELLIGENCE CLUSTER"]
+        direction TB
+        LS["Lead Supervisor"]
+        IMDB["IMDb Scanner"]
+        NEWS["News Scanner"]
+        LI["LinkedIn Miner"]
+        SCORER["Lead Scorer"]
+    end
+
+    subgraph OUT["OUTREACH CLUSTER"]
+        direction TB
+        OS["Outreach Supervisor"]
+        EMAIL["Email Drafter"]
+        SEQ["Sequence Manager"]
+        FOLLOW["Follow-up Agent"]
+    end
+
+    subgraph MKTG["MARKETING SUITE CLUSTER"]
+        direction TB
+        MS["Marketing Supervisor"]
+        IMG["Image Generator"]
+        CONTENT["Content Creator"]
+        SOCIAL["Social Publisher"]
+        BRAND["Brand Guardian"]
+        FIELD["Field Processor"]
+        SCHED["Scheduler"]
+        ANALYTICS["Analytics Agent"]
+    end
+
+    subgraph DATA["DATA LAYER"]
+        DB[("PostgreSQL<br/>Database")]
+        ASSETS[("Asset<br/>Storage")]
+        MODELS[("AI Models<br/>LoRA/SDXL")]
+    end
+
+    UI --> CMD
+    CMD --> MASTER
+    MASTER <--> LS
+    MASTER <--> OS
+    MASTER <--> MS
+
+    LS --> IMDB
+    LS --> NEWS
+    LS --> LI
+    LS --> SCORER
+
+    OS --> EMAIL
+    OS --> SEQ
+    OS --> FOLLOW
+
+    MS --> IMG
+    MS --> CONTENT
+    MS --> SOCIAL
+    MS --> BRAND
+    MS --> FIELD
+    MS --> SCHED
+    MS --> ANALYTICS
+
+    LEAD --> DB
+    OUT --> DB
+    MKTG --> DB
+    MKTG --> ASSETS
+    IMG --> MODELS
+
+    style MASTER fill:#ff00ff,stroke:#ff00ff,color:#fff
+    style LS fill:#00ffff,stroke:#00ffff,color:#000
+    style OS fill:#ff00ff,stroke:#ff00ff,color:#fff
+    style MS fill:#00ff88,stroke:#00ff88,color:#000
+    style DB fill:#bf5fff,stroke:#bf5fff,color:#fff
+    style ASSETS fill:#bf5fff,stroke:#bf5fff,color:#fff
+    style MODELS fill:#ffff00,stroke:#ffff00,color:#000
+                </div>
+            </div>
+        </div>
+
+        <!-- Lead Intelligence Cluster -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan"><span class="icon">&#9670;</span> CLUSTER 1: LEAD INTELLIGENCE</h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 25px;">
+                Automated discovery and qualification of film/TV productions requiring armoury services across multiple industry data sources.
+            </p>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--cyan); margin: 25px 0 15px;">DATA SOURCES</h3>
+
+            <div class="source-grid">
+                <div class="source-card">
+                    <div class="source-name">IMDb Pro</div>
+                    <div class="source-type">// PRIMARY SOURCE</div>
+                    <div class="source-data">Pre-production tracking<br/>Cast & crew contacts<br/>Production status</div>
+                </div>
+                <div class="source-card">
+                    <div class="source-name">Variety</div>
+                    <div class="source-type">// TRADE NEWS</div>
+                    <div class="source-data">Project announcements<br/>Studio deals<br/>Greenlight news</div>
+                </div>
+                <div class="source-card">
+                    <div class="source-name">Deadline</div>
+                    <div class="source-type">// TRADE NEWS</div>
+                    <div class="source-data">Breaking news<br/>Casting updates<br/>Production moves</div>
+                </div>
+                <div class="source-card">
+                    <div class="source-name">Screen Daily</div>
+                    <div class="source-type">// UK/EU FOCUS</div>
+                    <div class="source-data">UK productions<br/>European projects<br/>Industry trends</div>
+                </div>
+                <div class="source-card">
+                    <div class="source-name">LinkedIn</div>
+                    <div class="source-type">// NETWORKING</div>
+                    <div class="source-data">Producer connections<br/>Line producer moves<br/>Studio hiring</div>
+                </div>
+                <div class="source-card">
+                    <div class="source-name">Production Weekly</div>
+                    <div class="source-type">// INTEL SERVICE</div>
+                    <div class="source-data">Pre-production lists<br/>Contact databases<br/>Location schedules</div>
+                </div>
+                <div class="source-card">
+                    <div class="source-name">Film Commissions</div>
+                    <div class="source-type">// REGIONAL</div>
+                    <div class="source-data">UK filming permits<br/>Location bookings<br/>Regional incentives</div>
+                </div>
+                <div class="source-card">
+                    <div class="source-name">Trade Associations</div>
+                    <div class="source-type">// INDUSTRY</div>
+                    <div class="source-data">BECTU updates<br/>Guild news<br/>Industry events</div>
+                </div>
+            </div>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--cyan); margin: 30px 0 15px;">LEAD SCORING ALGORITHM</h3>
+
+            <div class="info-box">
+                <h4>Scoring Formula: 0-100 Points</h4>
+                <p>Each lead is scored based on multiple factors to prioritize outreach efforts.</p>
+            </div>
+
+            <table class="scoring-table">
+                <thead>
+                    <tr>
+                        <th>Factor</th>
+                        <th>Weight</th>
+                        <th>Criteria</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Genre Match</td>
+                        <td class="score-high">25 pts</td>
+                        <td>Action, War, Period, Crime, Thriller</td>
+                        <td>War film = +25, Romance = +5</td>
+                    </tr>
+                    <tr>
+                        <td>UK Location</td>
+                        <td class="score-high">20 pts</td>
+                        <td>Filming in UK or within travel range</td>
+                        <td>Pinewood = +20, LA = +0</td>
+                    </tr>
+                    <tr>
+                        <td>Budget Tier</td>
+                        <td class="score-med">15 pts</td>
+                        <td>Mid-budget or above preferred</td>
+                        <td>&pound;10M+ = +15, &lt;&pound;1M = +5</td>
+                    </tr>
+                    <tr>
+                        <td>Timeline</td>
+                        <td class="score-med">15 pts</td>
+                        <td>Pre-production 2-6 months out</td>
+                        <td>3 months = +15, 1 year = +5</td>
+                    </tr>
+                    <tr>
+                        <td>Contact Quality</td>
+                        <td class="score-med">10 pts</td>
+                        <td>Direct contact to decision maker</td>
+                        <td>Line Producer = +10, IMDb email = +3</td>
+                    </tr>
+                    <tr>
+                        <td>Past Relationship</td>
+                        <td class="score-low">10 pts</td>
+                        <td>Previous work or warm intro</td>
+                        <td>Past client = +10, Cold = +0</td>
+                    </tr>
+                    <tr>
+                        <td>Competition</td>
+                        <td class="score-low">5 pts</td>
+                        <td>Other armourers already attached</td>
+                        <td>None known = +5, Competitor = +0</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--cyan); margin: 30px 0 15px;">LEAD DISCOVERY FLOW</h3>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#00ffff', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+flowchart LR
+    subgraph SOURCES["DATA SOURCES"]
+        S1["IMDb Pro"]
+        S2["News Sites"]
+        S3["LinkedIn"]
+        S4["Prod Weekly"]
+        S5["Film Comms"]
+    end
+
+    subgraph PROCESS["PROCESSING"]
+        SCAN["Multi-Source<br/>Scanner"]
+        EXTRACT["Data<br/>Extraction"]
+        ENRICH["Contact<br/>Enrichment"]
+        SCORE["Lead<br/>Scoring"]
+        DEDUP["Deduplication"]
+    end
+
+    subgraph OUTPUT["OUTPUT"]
+        QUEUE["Priority<br/>Queue"]
+        ALERT["High-Score<br/>Alerts"]
+        DB[("Lead<br/>Database")]
+    end
+
+    S1 --> SCAN
+    S2 --> SCAN
+    S3 --> SCAN
+    S4 --> SCAN
+    S5 --> SCAN
+
+    SCAN --> EXTRACT --> ENRICH --> SCORE --> DEDUP
+
+    DEDUP --> QUEUE
+    DEDUP --> ALERT
+    DEDUP --> DB
+
+    style SCAN fill:#00ffff,stroke:#00ffff,color:#000
+    style SCORE fill:#00ff88,stroke:#00ff88,color:#000
+    style ALERT fill:#ff00ff,stroke:#ff00ff,color:#fff
+    style DB fill:#bf5fff,stroke:#bf5fff,color:#fff
+                </div>
+            </div>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--cyan); margin: 30px 0 15px;">CLUSTER AGENTS</h3>
+
+            <div class="two-column">
+                <div>
+                    <div class="agent-badge cyan" style="display: block; text-align: center; margin-bottom: 15px;">LEAD SUPERVISOR</div>
+                    <ul class="feature-list">
+                        <li>Coordinates all lead intelligence agents</li>
+                        <li>Manages scanning schedules</li>
+                        <li>Handles handoffs to Outreach cluster</li>
+                        <li>Maintains data quality standards</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="agent-badge cyan" style="display: block; text-align: center; margin-bottom: 15px;">IMDb SCANNER</div>
+                    <ul class="feature-list">
+                        <li>Monitors IMDb Pro for new productions</li>
+                        <li>Tracks status changes (Development &rarr; Pre-prod)</li>
+                        <li>Extracts key personnel contacts</li>
+                        <li>Identifies genre and location data</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="agent-badge cyan" style="display: block; text-align: center; margin-bottom: 15px;">NEWS SCANNER</div>
+                    <ul class="feature-list">
+                        <li>Scans Variety, Deadline, Screen Daily</li>
+                        <li>Monitors RSS feeds and social</li>
+                        <li>Extracts production announcements</li>
+                        <li>Cross-references with existing leads</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="agent-badge cyan" style="display: block; text-align: center; margin-bottom: 15px;">LEAD SCORER</div>
+                    <ul class="feature-list">
+                        <li>Applies scoring algorithm to all leads</li>
+                        <li>Updates scores as new data arrives</li>
+                        <li>Prioritizes outreach queue</li>
+                        <li>Generates high-priority alerts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Outreach Cluster -->
+        <div class="section magenta-border">
+            <h2 class="section-title magenta"><span class="icon">&#9656;</span> CLUSTER 2: OUTREACH</h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 25px;">
+                Automated, personalized communication with qualified leads through intelligent email sequences and relationship management.
+            </p>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--magenta); margin: 25px 0 15px;">OUTREACH SEQUENCE</h3>
+
+            <div class="pipeline">
+                <div class="pipeline-stage">
+                    <div class="stage-name">LEAD RECEIVED</div>
+                    <div class="stage-desc">From Intel Cluster</div>
+                </div>
+                <div class="pipeline-arrow">&rarr;</div>
+                <div class="pipeline-stage magenta">
+                    <div class="stage-name">RESEARCH</div>
+                    <div class="stage-desc">Company/Project Analysis</div>
+                </div>
+                <div class="pipeline-arrow">&rarr;</div>
+                <div class="pipeline-stage purple">
+                    <div class="stage-name">DRAFT EMAIL</div>
+                    <div class="stage-desc">Personalized Content</div>
+                </div>
+                <div class="pipeline-arrow">&rarr;</div>
+                <div class="pipeline-stage green">
+                    <div class="stage-name">REVIEW</div>
+                    <div class="stage-desc">Human Approval</div>
+                </div>
+                <div class="pipeline-arrow">&rarr;</div>
+                <div class="pipeline-stage yellow">
+                    <div class="stage-name">SEND</div>
+                    <div class="stage-desc">Tracked Delivery</div>
+                </div>
+            </div>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--magenta); margin: 30px 0 15px;">EMAIL PERSONALIZATION</h3>
+
+            <div class="info-box magenta">
+                <h4>Personalization Variables</h4>
+                <p>Every email is crafted with production-specific details to maximize response rates.</p>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h4 style="color: var(--cyan); margin-bottom: 15px;">Dynamic Fields</h4>
+                    <ul class="feature-list">
+                        <li><code>{production_name}</code> - Project title</li>
+                        <li><code>{recipient_name}</code> - Contact name</li>
+                        <li><code>{genre_reference}</code> - Genre-specific experience</li>
+                        <li><code>{similar_work}</code> - Relevant past projects</li>
+                        <li><code>{location_note}</code> - Proximity/logistics</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--magenta); margin-bottom: 15px;">Template Categories</h4>
+                    <ul class="feature-list">
+                        <li>Initial outreach (cold/warm intro)</li>
+                        <li>Follow-up #1 (value-add content)</li>
+                        <li>Follow-up #2 (case study share)</li>
+                        <li>Follow-up #3 (availability check)</li>
+                        <li>Re-engagement (stale leads)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--magenta); margin: 30px 0 15px;">FOLLOW-UP AUTOMATION</h3>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// INTELLIGENT SEQUENCE MANAGEMENT //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#ff00ff', 'lineColor': '#00ffff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+flowchart TB
+    START["Initial Email<br/>Sent"] --> WAIT1["Wait 3 Days"]
+    WAIT1 --> CHECK1{Response<br/>Received?}
+
+    CHECK1 -->|Yes| RESPOND["Human<br/>Handles Reply"]
+    CHECK1 -->|No| FU1["Follow-up #1<br/>Value-Add Content"]
+
+    FU1 --> WAIT2["Wait 5 Days"]
+    WAIT2 --> CHECK2{Response?}
+
+    CHECK2 -->|Yes| RESPOND
+    CHECK2 -->|No| FU2["Follow-up #2<br/>Case Study"]
+
+    FU2 --> WAIT3["Wait 7 Days"]
+    WAIT3 --> CHECK3{Response?}
+
+    CHECK3 -->|Yes| RESPOND
+    CHECK3 -->|No| FU3["Follow-up #3<br/>Final Check"]
+
+    FU3 --> WAIT4["Wait 14 Days"]
+    WAIT4 --> CHECK4{Response?}
+
+    CHECK4 -->|Yes| RESPOND
+    CHECK4 -->|No| NURTURE["Move to<br/>Nurture List"]
+
+    RESPOND --> CRM["Update CRM<br/>Status"]
+    NURTURE --> REQUEUE["Re-engage in<br/>3 Months"]
+
+    style START fill:#ff00ff,stroke:#ff00ff,color:#fff
+    style RESPOND fill:#00ff88,stroke:#00ff88,color:#000
+    style NURTURE fill:#ffff00,stroke:#ffff00,color:#000
+    style CRM fill:#bf5fff,stroke:#bf5fff,color:#fff
+                </div>
+            </div>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--magenta); margin: 30px 0 15px;">CLUSTER AGENTS</h3>
+
+            <div class="cluster-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div style="background: var(--bg-darker); border: 1px solid var(--magenta); border-radius: 8px; padding: 20px;">
+                    <div class="agent-badge magenta" style="display: block; text-align: center; margin-bottom: 15px;">OUTREACH SUPERVISOR</div>
+                    <ul class="feature-list">
+                        <li>Coordinates email campaigns</li>
+                        <li>Manages agent handoffs</li>
+                        <li>Tracks overall pipeline</li>
+                        <li>Reports to Orchestrator</li>
+                    </ul>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--magenta); border-radius: 8px; padding: 20px;">
+                    <div class="agent-badge magenta" style="display: block; text-align: center; margin-bottom: 15px;">EMAIL DRAFTER</div>
+                    <ul class="feature-list">
+                        <li>Generates personalized emails</li>
+                        <li>Applies brand voice</li>
+                        <li>Uses production research</li>
+                        <li>A/B tests subject lines</li>
+                    </ul>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--magenta); border-radius: 8px; padding: 20px;">
+                    <div class="agent-badge magenta" style="display: block; text-align: center; margin-bottom: 15px;">SEQUENCE MANAGER</div>
+                    <ul class="feature-list">
+                        <li>Schedules follow-ups</li>
+                        <li>Tracks open/click rates</li>
+                        <li>Adjusts timing</li>
+                        <li>Manages nurture lists</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marketing Suite Cluster -->
+        <div class="section green-border">
+            <h2 class="section-title green"><span class="icon">&#9632;</span> CLUSTER 3: MARKETING SUITE</h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 25px;">
+                AI-powered content generation and social media management, transforming product photography into
+                engaging marketing materials using custom-trained image generation models.
+            </p>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--green); margin: 25px 0 15px;">AI IMAGE GENERATION PIPELINE</h3>
+
+            <div class="info-box green">
+                <h4>Technology Stack</h4>
+                <p>Stable Diffusion XL with custom LoRA fine-tuning trained on Cohort's product catalogue and brand aesthetic.</p>
+            </div>
+
+            <div class="pipeline">
+                <div class="pipeline-stage green">
+                    <div class="stage-name">WHITE BG PHOTO</div>
+                    <div class="stage-desc">Product catalogue shot</div>
+                </div>
+                <div class="pipeline-arrow" style="color: var(--green);">&rarr;</div>
+                <div class="pipeline-stage purple">
+                    <div class="stage-name">REMBG/SAM</div>
+                    <div class="stage-desc">Background removal</div>
+                </div>
+                <div class="pipeline-arrow" style="color: var(--green);">&rarr;</div>
+                <div class="pipeline-stage">
+                    <div class="stage-name">LoRA MODEL</div>
+                    <div class="stage-desc">Brand-trained SDXL</div>
+                </div>
+                <div class="pipeline-arrow" style="color: var(--green);">&rarr;</div>
+                <div class="pipeline-stage yellow">
+                    <div class="stage-name">CONTROLNET</div>
+                    <div class="stage-desc">Product placement</div>
+                </div>
+                <div class="pipeline-arrow" style="color: var(--green);">&rarr;</div>
+                <div class="pipeline-stage magenta">
+                    <div class="stage-name">STYLED IMAGE</div>
+                    <div class="stage-desc">Marketing-ready</div>
+                </div>
+            </div>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// MULTI-PRODUCT COMPOSITING //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#00ff88', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+flowchart LR
+    subgraph INPUT["INPUT PRODUCTS"]
+        P1["Product A<br/>(white bg)"]
+        P2["Product B<br/>(white bg)"]
+        P3["Product C<br/>(white bg)"]
+    end
+
+    subgraph PROCESS["AI PROCESSING"]
+        SEGMENT["Segment<br/>Each Item"]
+        COMPOSE["Scene<br/>Composition"]
+        STYLE["Brand Style<br/>Transfer"]
+        LIGHT["Lighting<br/>Harmonization"]
+    end
+
+    subgraph OUTPUT["OUTPUT"]
+        SCENE["Cohesive<br/>Marketing Scene"]
+        VARIATIONS["Style<br/>Variations"]
+    end
+
+    P1 --> SEGMENT
+    P2 --> SEGMENT
+    P3 --> SEGMENT
+
+    SEGMENT --> COMPOSE --> STYLE --> LIGHT
+
+    LIGHT --> SCENE
+    LIGHT --> VARIATIONS
+
+    style SEGMENT fill:#00ff88,stroke:#00ff88,color:#000
+    style STYLE fill:#ff00ff,stroke:#ff00ff,color:#fff
+    style SCENE fill:#bf5fff,stroke:#bf5fff,color:#fff
+                </div>
+            </div>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--green); margin: 30px 0 15px;">FIELD CONTENT PIPELINE</h3>
+
+            <div class="info-box yellow">
+                <h4>Armourer Content Collection</h4>
+                <p>8-15 armourers capture BTS content during downtime on set. Simple upload via web form, shared folder, or email.</p>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h4 style="color: var(--cyan); margin-bottom: 15px;">Upload Methods</h4>
+                    <ul class="feature-list">
+                        <li>Web form with metadata fields</li>
+                        <li>Shared folder (Google Drive/Dropbox)</li>
+                        <li>Email to dedicated address</li>
+                        <li>Automatic file detection</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--green); margin-bottom: 15px;">Content Processing</h4>
+                    <ul class="feature-list">
+                        <li>Auto-tagging with AI vision</li>
+                        <li>Face/sensitive content detection</li>
+                        <li>Production association</li>
+                        <li>Approval routing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--green); margin: 30px 0 15px;">CONTENT APPROVAL WORKFLOW</h3>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#00ff88', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+flowchart TB
+    CONTENT["New Content"] --> CLASSIFY{Content<br/>Type?}
+
+    CLASSIFY -->|Product Shot| AUTO["Auto-Approve<br/>Queue"]
+    CLASSIFY -->|BTS Content| REVIEW["Human Review<br/>Required"]
+    CLASSIFY -->|Active Production| HOLD["Hold for<br/>Production Wrap"]
+
+    AUTO --> SCHEDULE["Schedule<br/>for Posting"]
+    REVIEW --> APPROVE{Approved?}
+
+    APPROVE -->|Yes| SCHEDULE
+    APPROVE -->|No| ARCHIVE["Archive<br/>(Not for Use)"]
+
+    HOLD --> NOTIFY["Notify on<br/>Wrap Date"]
+    NOTIFY --> REVIEW
+
+    SCHEDULE --> POST["Auto-Post<br/>to Platforms"]
+    POST --> TRACK["Track<br/>Engagement"]
+
+    style AUTO fill:#00ff88,stroke:#00ff88,color:#000
+    style REVIEW fill:#ffff00,stroke:#ffff00,color:#000
+    style HOLD fill:#ff8800,stroke:#ff8800,color:#000
+    style POST fill:#ff00ff,stroke:#ff00ff,color:#fff
+                </div>
+            </div>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--green); margin: 30px 0 15px;">MARKETING AGENTS</h3>
+
+            <div class="cluster-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <div style="background: var(--bg-darker); border: 1px solid var(--green); border-radius: 8px; padding: 15px;">
+                    <div class="agent-badge green" style="display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem;">MARKETING SUPERVISOR</div>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Coordinates all marketing activities</p>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--green); border-radius: 8px; padding: 15px;">
+                    <div class="agent-badge green" style="display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem;">IMAGE GENERATOR</div>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">AI image creation from products</p>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--green); border-radius: 8px; padding: 15px;">
+                    <div class="agent-badge green" style="display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem;">CONTENT CREATOR</div>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Writes captions and copy</p>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--green); border-radius: 8px; padding: 15px;">
+                    <div class="agent-badge green" style="display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem;">SOCIAL PUBLISHER</div>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Posts to all platforms</p>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--green); border-radius: 8px; padding: 15px;">
+                    <div class="agent-badge green" style="display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem;">BRAND GUARDIAN</div>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Enforces style guidelines</p>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--green); border-radius: 8px; padding: 15px;">
+                    <div class="agent-badge green" style="display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem;">FIELD PROCESSOR</div>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Handles armourer uploads</p>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--green); border-radius: 8px; padding: 15px;">
+                    <div class="agent-badge green" style="display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem;">SCHEDULER</div>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Optimal posting times</p>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--green); border-radius: 8px; padding: 15px;">
+                    <div class="agent-badge green" style="display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem;">ANALYTICS AGENT</div>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Tracks performance</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Schema -->
+        <div class="section purple-border">
+            <h2 class="section-title purple"><span class="icon">&#9638;</span> DATABASE SCHEMA</h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 25px;">
+                PostgreSQL database with optimized tables for lead tracking, content management, and analytics.
+            </p>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// ENTITY RELATIONSHIP DIAGRAM //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#bf5fff', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+erDiagram
+    PRODUCTIONS ||--o{ CONTACTS : has
+    PRODUCTIONS ||--o{ OUTREACH : receives
+    PRODUCTIONS ||--o{ LEAD_SCORES : scored
+    CONTACTS ||--o{ OUTREACH : receives
+    CONTACTS }o--|| COMPANIES : works_for
+
+    ASSETS ||--o{ AI_GENERATIONS : sources
+    ASSETS }o--|| PRODUCTIONS : from_set
+    AI_GENERATIONS ||--o{ CONTENT_POSTS : uses
+
+    PRODUCTIONS {
+        uuid id PK
+        string title
+        string imdb_id
+        enum status
+        string genre
+        string location
+        date start_date
+        decimal budget
+        timestamp updated
+    }
+
+    CONTACTS {
+        uuid id PK
+        string name
+        string email
+        string role
+        uuid company_id FK
+        string linkedin
+        timestamp last_contact
+    }
+
+    COMPANIES {
+        uuid id PK
+        string name
+        string type
+        string website
+        jsonb metadata
+    }
+
+    OUTREACH {
+        uuid id PK
+        uuid production_id FK
+        uuid contact_id FK
+        enum status
+        string subject
+        text body
+        int sequence_num
+        timestamp sent_at
+        boolean opened
+        boolean replied
+    }
+
+    ASSETS {
+        uuid id PK
+        string filename
+        enum type
+        string storage_url
+        uuid production_id FK
+        jsonb metadata
+        boolean approved
+        timestamp uploaded
+    }
+
+    AI_GENERATIONS {
+        uuid id PK
+        uuid source_asset FK
+        string model_used
+        text prompt
+        string output_url
+        float quality_score
+        timestamp generated
+    }
+
+    CONTENT_POSTS {
+        uuid id PK
+        uuid asset_id FK
+        enum platform
+        text caption
+        timestamp scheduled
+        timestamp posted
+        jsonb engagement
+    }
+
+    LEAD_SCORES {
+        uuid id PK
+        uuid production_id FK
+        int score
+        jsonb factors
+        timestamp calculated
+    }
+                </div>
+            </div>
+
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--purple); margin: 30px 0 15px;">CORE TABLES</h3>
+
+            <div class="two-column">
+                <div class="db-table">
+                    <div class="db-table-header">
+                        <span>productions</span>
+                        <span class="table-icon">// LEAD INTEL</span>
+                    </div>
+                    <div class="db-table-body">
+                        <div class="db-field primary"><span class="field-name">id</span><span class="field-type">UUID</span></div>
+                        <div class="db-field"><span class="field-name">title</span><span class="field-type">VARCHAR(255)</span></div>
+                        <div class="db-field"><span class="field-name">imdb_id</span><span class="field-type">VARCHAR(20)</span></div>
+                        <div class="db-field"><span class="field-name">status</span><span class="field-type">ENUM</span></div>
+                        <div class="db-field"><span class="field-name">genre</span><span class="field-type">VARCHAR(100)</span></div>
+                        <div class="db-field"><span class="field-name">uk_location</span><span class="field-type">BOOLEAN</span></div>
+                        <div class="db-field"><span class="field-name">estimated_budget</span><span class="field-type">DECIMAL</span></div>
+                        <div class="db-field"><span class="field-name">start_date</span><span class="field-type">DATE</span></div>
+                    </div>
+                </div>
+
+                <div class="db-table">
+                    <div class="db-table-header">
+                        <span>outreach_emails</span>
+                        <span class="table-icon">// OUTREACH</span>
+                    </div>
+                    <div class="db-table-body">
+                        <div class="db-field primary"><span class="field-name">id</span><span class="field-type">UUID</span></div>
+                        <div class="db-field foreign"><span class="field-name">production_id</span><span class="field-type">UUID</span></div>
+                        <div class="db-field foreign"><span class="field-name">contact_id</span><span class="field-type">UUID</span></div>
+                        <div class="db-field"><span class="field-name">sequence_number</span><span class="field-type">INTEGER</span></div>
+                        <div class="db-field"><span class="field-name">subject</span><span class="field-type">VARCHAR(200)</span></div>
+                        <div class="db-field"><span class="field-name">body</span><span class="field-type">TEXT</span></div>
+                        <div class="db-field"><span class="field-name">sent_at</span><span class="field-type">TIMESTAMP</span></div>
+                        <div class="db-field"><span class="field-name">opened</span><span class="field-type">BOOLEAN</span></div>
+                    </div>
+                </div>
+
+                <div class="db-table">
+                    <div class="db-table-header">
+                        <span>assets</span>
+                        <span class="table-icon">// MARKETING</span>
+                    </div>
+                    <div class="db-table-body">
+                        <div class="db-field primary"><span class="field-name">id</span><span class="field-type">UUID</span></div>
+                        <div class="db-field"><span class="field-name">type</span><span class="field-type">ENUM (product, bts, ai_gen)</span></div>
+                        <div class="db-field"><span class="field-name">storage_url</span><span class="field-type">TEXT</span></div>
+                        <div class="db-field foreign"><span class="field-name">production_id</span><span class="field-type">UUID (nullable)</span></div>
+                        <div class="db-field"><span class="field-name">uploaded_by</span><span class="field-type">VARCHAR(100)</span></div>
+                        <div class="db-field"><span class="field-name">approved</span><span class="field-type">BOOLEAN</span></div>
+                        <div class="db-field"><span class="field-name">metadata</span><span class="field-type">JSONB</span></div>
+                    </div>
+                </div>
+
+                <div class="db-table">
+                    <div class="db-table-header">
+                        <span>ai_generations</span>
+                        <span class="table-icon">// IMAGE GEN</span>
+                    </div>
+                    <div class="db-table-body">
+                        <div class="db-field primary"><span class="field-name">id</span><span class="field-type">UUID</span></div>
+                        <div class="db-field foreign"><span class="field-name">source_asset_id</span><span class="field-type">UUID</span></div>
+                        <div class="db-field"><span class="field-name">model</span><span class="field-type">VARCHAR(50)</span></div>
+                        <div class="db-field"><span class="field-name">prompt</span><span class="field-type">TEXT</span></div>
+                        <div class="db-field"><span class="field-name">output_url</span><span class="field-type">TEXT</span></div>
+                        <div class="db-field"><span class="field-name">quality_score</span><span class="field-type">FLOAT</span></div>
+                        <div class="db-field"><span class="field-name">generated_at</span><span class="field-type">TIMESTAMP</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integration Points -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan"><span class="icon">&#9670;</span> INTEGRATION POINTS</h2>
+
+            <div class="cluster-grid">
+                <div style="background: var(--bg-darker); border: 1px solid var(--cyan); border-radius: 8px; padding: 25px;">
+                    <h4 style="color: var(--cyan); margin-bottom: 15px;">External APIs</h4>
+                    <ul class="feature-list">
+                        <li>IMDb Pro API (lead data)</li>
+                        <li>LinkedIn API (networking)</li>
+                        <li>Gmail/Outlook API (email)</li>
+                        <li>Replicate/HuggingFace (AI models)</li>
+                        <li>Social media APIs (posting)</li>
+                    </ul>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--magenta); border-radius: 8px; padding: 25px;">
+                    <h4 style="color: var(--magenta); margin-bottom: 15px;">Cloud Infrastructure</h4>
+                    <ul class="feature-list">
+                        <li>PostgreSQL (Supabase/Railway)</li>
+                        <li>Asset storage (S3/Cloudflare R2)</li>
+                        <li>GPU compute (RunPod/Lambda)</li>
+                        <li>Queue system (Redis)</li>
+                        <li>Webhook handlers</li>
+                    </ul>
+                </div>
+                <div style="background: var(--bg-darker); border: 1px solid var(--green); border-radius: 8px; padding: 25px;">
+                    <h4 style="color: var(--green); margin-bottom: 15px;">AutoGen Framework</h4>
+                    <ul class="feature-list">
+                        <li>SelectorGroupChat (orchestration)</li>
+                        <li>Swarm pattern (clusters)</li>
+                        <li>Tool definitions (per agent)</li>
+                        <li>Handoff protocols</li>
+                        <li>Memory persistence</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>COHORT ARMOURY SERVICES // SYSTEM DESIGN v3.0</p>
+            <p style="margin-top: 10px; color: var(--cyan);">COMPLETE SPECIFICATION // ALL CLUSTERS</p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1a1a25',
+                primaryTextColor: '#ffffff',
+                primaryBorderColor: '#00ffff',
+                lineColor: '#ff00ff',
+                secondaryColor: '#12121a',
+                tertiaryColor: '#0a0a0f',
+                textColor: '#ffffff',
+                nodeTextColor: '#ffffff',
+                edgeLabelBackground: '#1a1a25',
+                clusterBkg: '#0a0a0f',
+                clusterBorder: '#00ffff',
+                titleColor: '#00ffff'
+            },
+            flowchart: {
+                nodeSpacing: 50,
+                rankSpacing: 50,
+                curve: 'basis',
+                htmlLabels: true
+            },
+            er: {
+                useMaxWidth: true
+            }
+        });
+    </script>
+</body>
+</html>

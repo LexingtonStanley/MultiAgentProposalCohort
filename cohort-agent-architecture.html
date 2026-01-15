@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohort Armoury Services - Agent Architecture</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050508;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --cyan: #00ffff;
+            --cyan-dim: #00cccc;
+            --magenta: #ff00ff;
+            --magenta-dim: #cc00cc;
+            --purple: #bf5fff;
+            --green: #00ff88;
+            --yellow: #ffff00;
+            --red: #ff3366;
+            --orange: #ff8800;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-dim: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--cyan-dim) 1px, transparent 1px),
+                linear-gradient(90deg, var(--cyan-dim) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            border: 1px solid var(--cyan);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(0, 255, 255, 0.1) 50%,
+                transparent 60%
+            );
+            animation: headerShine 3s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--cyan));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 3s linear infinite;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .header .subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .version {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--magenta);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Section styling */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+        }
+
+        .section.cyan-border {
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .section.magenta-border {
+            border-color: var(--magenta);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+        }
+
+        .section.magenta-border::before {
+            background: linear-gradient(90deg, var(--magenta), var(--purple));
+        }
+
+        .section.purple-border {
+            border-color: var(--purple);
+            box-shadow: 0 0 15px rgba(191, 95, 255, 0.2);
+        }
+
+        .section.purple-border::before {
+            background: linear-gradient(90deg, var(--purple), var(--magenta));
+        }
+
+        .section.green-border {
+            border-color: var(--green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .section.green-border::before {
+            background: linear-gradient(90deg, var(--green), var(--cyan));
+        }
+
+        .section.yellow-border {
+            border-color: var(--yellow);
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.2);
+        }
+
+        .section.yellow-border::before {
+            background: linear-gradient(90deg, var(--yellow), var(--green));
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title.cyan { color: var(--cyan); }
+        .section-title.magenta { color: var(--magenta); }
+        .section-title.purple { color: var(--purple); }
+        .section-title.green { color: var(--green); }
+        .section-title.yellow { color: var(--yellow); }
+
+        .section-title .icon {
+            font-size: 1.8rem;
+        }
+
+        /* Agent Cards */
+        .agent-card {
+            background: var(--bg-darker);
+            border: 2px solid var(--text-dim);
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
+        }
+
+        .agent-card.orchestrator { border-color: var(--yellow); }
+        .agent-card.lead-intel { border-color: var(--cyan); }
+        .agent-card.outreach { border-color: var(--magenta); }
+        .agent-card.marketing { border-color: var(--green); }
+
+        .agent-header {
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .agent-card.orchestrator .agent-header {
+            background: linear-gradient(90deg, rgba(255, 255, 0, 0.2), rgba(255, 136, 0, 0.1));
+        }
+
+        .agent-card.lead-intel .agent-header {
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.2), rgba(0, 204, 204, 0.1));
+        }
+
+        .agent-card.outreach .agent-header {
+            background: linear-gradient(90deg, rgba(255, 0, 255, 0.2), rgba(191, 95, 255, 0.1));
+        }
+
+        .agent-card.marketing .agent-header {
+            background: linear-gradient(90deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 255, 0.1));
+        }
+
+        .agent-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+        }
+
+        .agent-card.orchestrator .agent-name { color: var(--yellow); }
+        .agent-card.lead-intel .agent-name { color: var(--cyan); }
+        .agent-card.outreach .agent-name { color: var(--magenta); }
+        .agent-card.marketing .agent-name { color: var(--green); }
+
+        .agent-role {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            padding: 5px 15px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .agent-body {
+            padding: 25px;
+        }
+
+        .agent-section {
+            margin-bottom: 20px;
+        }
+
+        .agent-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .agent-section-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .system-prompt {
+            background: var(--bg-card);
+            border-left: 3px solid var(--cyan);
+            padding: 15px 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-radius: 0 5px 5px 0;
+            line-height: 1.8;
+        }
+
+        .agent-card.outreach .system-prompt {
+            border-left-color: var(--magenta);
+        }
+
+        .agent-card.marketing .system-prompt {
+            border-left-color: var(--green);
+        }
+
+        .agent-card.orchestrator .system-prompt {
+            border-left-color: var(--yellow);
+        }
+
+        /* Tool badges */
+        .tool-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tool-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+        }
+
+        .agent-card.outreach .tool-badge {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: var(--magenta);
+            color: var(--magenta);
+        }
+
+        .agent-card.marketing .tool-badge {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .agent-card.orchestrator .tool-badge {
+            background: rgba(255, 255, 0, 0.1);
+            border-color: var(--yellow);
+            color: var(--yellow);
+        }
+
+        .tool-badge .tool-icon {
+            font-size: 0.9rem;
+        }
+
+        /* Handoff signals */
+        .handoff-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .handoff-signal {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 15px;
+            background: var(--bg-card);
+            border-radius: 5px;
+        }
+
+        .handoff-trigger {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            background: rgba(255, 0, 255, 0.2);
+            color: var(--magenta);
+        }
+
+        .handoff-arrow {
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .handoff-target {
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--text-secondary);
+        }
+
+        /* Diagram container */
+        .diagram-container {
+            background: var(--bg-darker);
+            border: 1px solid var(--text-dim);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 25px 0;
+            overflow-x: auto;
+        }
+
+        .diagram-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--magenta);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: var(--bg-darker);
+            border: 1px solid var(--text-dim);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--cyan);
+            margin-bottom: 5px;
+        }
+
+        .stat-box.magenta .stat-value { color: var(--magenta); }
+        .stat-box.green .stat-value { color: var(--green); }
+        .stat-box.yellow .stat-value { color: var(--yellow); }
+        .stat-box.purple .stat-value { color: var(--purple); }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Cluster box */
+        .cluster-box {
+            background: var(--bg-darker);
+            border: 2px solid var(--cyan);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .cluster-box.magenta { border-color: var(--magenta); }
+        .cluster-box.green { border-color: var(--green); }
+        .cluster-box.yellow { border-color: var(--yellow); }
+
+        .cluster-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cluster-box .cluster-title { color: var(--cyan); }
+        .cluster-box.magenta .cluster-title { color: var(--magenta); }
+        .cluster-box.green .cluster-title { color: var(--green); }
+        .cluster-box.yellow .cluster-title { color: var(--yellow); }
+
+        .cluster-desc {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .agent-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .agent-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .agent-chip.cyan {
+            background: rgba(0, 255, 255, 0.15);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+        }
+
+        .agent-chip.magenta {
+            background: rgba(255, 0, 255, 0.15);
+            border: 1px solid var(--magenta);
+            color: var(--magenta);
+        }
+
+        .agent-chip.green {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid var(--green);
+            color: var(--green);
+        }
+
+        .agent-chip.yellow {
+            background: rgba(255, 255, 0, 0.15);
+            border: 1px solid var(--yellow);
+            color: var(--yellow);
+        }
+
+        /* Info box */
+        .info-box {
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 4px solid var(--cyan);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box.magenta {
+            background: rgba(255, 0, 255, 0.05);
+            border-left-color: var(--magenta);
+        }
+
+        .info-box.yellow {
+            background: rgba(255, 255, 0, 0.05);
+            border-left-color: var(--yellow);
+        }
+
+        .info-box h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyan);
+            margin-bottom: 10px;
+        }
+
+        .info-box.magenta h4 { color: var(--magenta); }
+        .info-box.yellow h4 { color: var(--yellow); }
+
+        .info-box p {
+            color: var(--text-secondary);
+        }
+
+        /* Code blocks */
+        code {
+            background: var(--bg-darker);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--green);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 60px;
+            border-top: 1px solid var(--text-dim);
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .section { padding: 20px; }
+            .agent-header { flex-direction: column; gap: 10px; text-align: center; }
+        }
+
+        /* Feature list */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .feature-list li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+            color: var(--cyan);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>AGENT ARCHITECTURE</h1>
+            <div class="subtitle">COHORT ARMOURY SERVICES // AI AGENT SPECIFICATIONS</div>
+            <div class="version">VERSION 3.0 // AUTOGEN FRAMEWORK</div>
+        </div>
+
+        <!-- Overview -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan"><span class="icon">&#9670;</span> ARCHITECTURE OVERVIEW</h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 25px; font-size: 1.1rem;">
+                The Cohort Armoury agentic system comprises <span style="color: var(--cyan);">15 specialized AI agents</span>
+                organized into a hierarchical structure using Microsoft's <span style="color: var(--magenta);">AutoGen framework</span>.
+                One <span style="color: var(--yellow);">Master Orchestrator</span> routes tasks to three specialized clusters.
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-box yellow">
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Orchestrator</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Lead Intel Agents</div>
+                </div>
+                <div class="stat-box magenta">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Outreach Agents</div>
+                </div>
+                <div class="stat-box green">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Marketing Agents</div>
+                </div>
+            </div>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// AGENT HIERARCHY //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#00ffff', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+flowchart TB
+    subgraph TOP["ORCHESTRATION LAYER"]
+        MASTER["MASTER<br/>ORCHESTRATOR"]
+    end
+
+    subgraph LEAD["LEAD INTELLIGENCE CLUSTER"]
+        LS["Lead<br/>Supervisor"]
+        IMDB["IMDb<br/>Scanner"]
+        NEWS["News<br/>Scanner"]
+        SCORER["Lead<br/>Scorer"]
+    end
+
+    subgraph OUT["OUTREACH CLUSTER"]
+        OS["Outreach<br/>Supervisor"]
+        EMAIL["Email<br/>Drafter"]
+        SEQ["Sequence<br/>Manager"]
+    end
+
+    subgraph MKTG["MARKETING SUITE CLUSTER"]
+        MS["Marketing<br/>Supervisor"]
+        IMG["Image<br/>Generator"]
+        CONTENT["Content<br/>Creator"]
+        SOCIAL["Social<br/>Publisher"]
+        BRAND["Brand<br/>Guardian"]
+        FIELD["Field<br/>Processor"]
+        SCHED["Scheduler"]
+        ANALYTICS["Analytics"]
+    end
+
+    MASTER <-->|SelectorGroupChat| LS
+    MASTER <-->|SelectorGroupChat| OS
+    MASTER <-->|SelectorGroupChat| MS
+
+    LS <-->|Swarm| IMDB
+    LS <-->|Swarm| NEWS
+    LS <-->|Swarm| SCORER
+
+    OS <-->|Swarm| EMAIL
+    OS <-->|Swarm| SEQ
+
+    MS <-->|Swarm| IMG
+    MS <-->|Swarm| CONTENT
+    MS <-->|Swarm| SOCIAL
+    MS <-->|Swarm| BRAND
+    MS <-->|Swarm| FIELD
+    MS <-->|Swarm| SCHED
+    MS <-->|Swarm| ANALYTICS
+
+    style MASTER fill:#ffff00,stroke:#ffff00,color:#000
+    style LS fill:#00ffff,stroke:#00ffff,color:#000
+    style OS fill:#ff00ff,stroke:#ff00ff,color:#fff
+    style MS fill:#00ff88,stroke:#00ff88,color:#000
+                </div>
+            </div>
+
+            <div class="info-box yellow">
+                <h4>AutoGen Patterns Used</h4>
+                <p><strong>SelectorGroupChat</strong> at the top level enables the Master Orchestrator to intelligently route requests to the appropriate cluster supervisor. <strong>Swarm pattern</strong> within each cluster allows agents to collaborate dynamically on complex tasks.</p>
+            </div>
+        </div>
+
+        <!-- Master Orchestrator -->
+        <div class="section yellow-border">
+            <h2 class="section-title yellow"><span class="icon">&#9733;</span> MASTER ORCHESTRATOR</h2>
+
+            <div class="agent-card orchestrator">
+                <div class="agent-header">
+                    <span class="agent-name">Master Orchestrator</span>
+                    <span class="agent-role">CENTRAL COMMAND</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Master Orchestrator for Cohort Armoury Services' AI system. You are the SINGLE POINT OF CONTACT for all user requests.
+
+Your role is to:
+1. Understand incoming requests and determine which cluster should handle them
+2. Route tasks to the appropriate Cluster Supervisor (Lead Intelligence, Outreach, or Marketing)
+3. Coordinate multi-cluster operations when needed
+4. Report progress and results back to the user in clear, non-technical language
+
+CLUSTER ROUTING RULES:
+- Lead-related queries (find productions, track projects, score leads) -> Lead Intelligence Supervisor
+- Communication tasks (draft emails, manage sequences, follow-ups) -> Outreach Supervisor
+- Content tasks (images, social posts, brand content, analytics) -> Marketing Supervisor
+
+Always confirm task receipt and provide status updates. Never expose technical details to the user.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> route_to_cluster</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> get_cluster_status</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> aggregate_reports</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> send_user_notification</span>
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Handoff Signals</div>
+                        <div class="handoff-list">
+                            <div class="handoff-signal">
+                                <span class="handoff-trigger">"find leads"</span>
+                                <span class="handoff-arrow">&rarr;</span>
+                                <span class="handoff-target">Lead Intelligence Supervisor</span>
+                            </div>
+                            <div class="handoff-signal">
+                                <span class="handoff-trigger">"send email"</span>
+                                <span class="handoff-arrow">&rarr;</span>
+                                <span class="handoff-target">Outreach Supervisor</span>
+                            </div>
+                            <div class="handoff-signal">
+                                <span class="handoff-trigger">"create content"</span>
+                                <span class="handoff-arrow">&rarr;</span>
+                                <span class="handoff-target">Marketing Supervisor</span>
+                            </div>
+                            <div class="handoff-signal">
+                                <span class="handoff-trigger">"daily report"</span>
+                                <span class="handoff-arrow">&rarr;</span>
+                                <span class="handoff-target">All Supervisors (parallel)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lead Intelligence Cluster -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan"><span class="icon">&#9670;</span> CLUSTER 1: LEAD INTELLIGENCE</h2>
+
+            <div class="cluster-box">
+                <div class="cluster-title">&#9670; Lead Intelligence Cluster</div>
+                <div class="cluster-desc">Discovers, enriches, and scores potential film/TV production leads from multiple industry sources.</div>
+                <div class="agent-list">
+                    <span class="agent-chip cyan">Lead Supervisor</span>
+                    <span class="agent-chip cyan">IMDb Scanner</span>
+                    <span class="agent-chip cyan">News Scanner</span>
+                    <span class="agent-chip cyan">Lead Scorer</span>
+                </div>
+            </div>
+
+            <!-- Lead Supervisor -->
+            <div class="agent-card lead-intel">
+                <div class="agent-header">
+                    <span class="agent-name">Lead Supervisor</span>
+                    <span class="agent-role">CLUSTER COORDINATOR</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Lead Intelligence Supervisor. You coordinate all lead discovery and qualification activities.
+
+RESPONSIBILITIES:
+1. Receive lead discovery requests from the Master Orchestrator
+2. Assign scanning tasks to IMDb Scanner and News Scanner agents
+3. Queue discovered leads for scoring by Lead Scorer
+4. Manage scanning schedules (daily IMDb, hourly news)
+5. Deduplicate leads and maintain data quality
+6. Report new high-priority leads to Orchestrator for potential outreach
+
+SOURCES TO MONITOR:
+- IMDb Pro (primary production database)
+- Variety, Deadline, Screen Daily (trade news)
+- LinkedIn (professional network updates)
+- Production Weekly (intel service)
+- UK Film Commissions (regional permits)
+
+Hand off scored leads with score >= 70 to Outreach cluster automatically.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> assign_scanner</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> check_duplicates</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> queue_for_scoring</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> handoff_to_outreach</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> db_query</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IMDb Scanner -->
+            <div class="agent-card lead-intel">
+                <div class="agent-header">
+                    <span class="agent-name">IMDb Scanner</span>
+                    <span class="agent-role">DATA EXTRACTION</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the IMDb Pro Scanner agent. Your role is to monitor IMDb Pro for film and TV productions that may require armoury services.
+
+SCANNING CRITERIA:
+- Status: Development, Pre-production, or just announced
+- Genres: Action, War, Period, Crime, Thriller, Western, Military
+- Location: UK-based or UK studio (Pinewood, Shepperton, Leavesden)
+- Budget: Mid-range or above preferred
+
+DATA TO EXTRACT:
+- Production title and IMDb ID
+- Status and expected start date
+- Genre and logline (for relevance)
+- Key contacts: Line Producer, Production Manager, HOD Props
+- Production company and studio
+- Filming locations if listed
+
+Return structured data with confidence scores for each field.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> imdb_pro_api</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> extract_contacts</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> parse_production_page</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> save_lead</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News Scanner -->
+            <div class="agent-card lead-intel">
+                <div class="agent-header">
+                    <span class="agent-name">News Scanner</span>
+                    <span class="agent-role">INDUSTRY MONITORING</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Industry News Scanner. You monitor entertainment trade publications for production announcements.
+
+SOURCES:
+- Variety (variety.com)
+- Deadline Hollywood (deadline.com)
+- Screen Daily (screendaily.com)
+- The Hollywood Reporter
+- Production Weekly alerts
+- LinkedIn industry updates
+
+KEYWORDS TO TRACK:
+- "greenlit", "production start", "begins filming"
+- "UK production", "British film", "shooting in London"
+- Genre terms: "action thriller", "war epic", "period drama"
+- Studio mentions: Pinewood, Shepperton, Warner Bros Leavesden
+
+Extract: Title, announcement date, key personnel, studio, estimated timeline.
+Cross-reference with existing IMDb leads to enrich data.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> scrape_news_feed</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> rss_monitor</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> linkedin_api</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> entity_extraction</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> cross_reference_db</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lead Scorer -->
+            <div class="agent-card lead-intel">
+                <div class="agent-header">
+                    <span class="agent-name">Lead Scorer</span>
+                    <span class="agent-role">QUALIFICATION</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Lead Scorer. You evaluate and prioritize leads based on likelihood of requiring armoury services.
+
+SCORING ALGORITHM (0-100):
+- Genre Match (25 pts): Action/War/Crime = 25, Period = 20, Drama = 10, Comedy = 5
+- UK Location (20 pts): UK studio = 20, UK location = 15, Europe = 10, Other = 0
+- Budget Tier (15 pts): Major = 15, Mid = 12, Indie = 8, Micro = 3
+- Timeline (15 pts): 2-4 months = 15, 4-8 months = 10, 8+ months = 5
+- Contact Quality (10 pts): Direct decision-maker = 10, Dept head = 7, General = 3
+- Past Relationship (10 pts): Previous client = 10, Warm intro = 5, Cold = 0
+- Competition (5 pts): No competitor = 5, Unknown = 3, Competitor attached = 0
+
+Output: Numeric score, factor breakdown, and priority tier (Hot/Warm/Cool/Archive).
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> calculate_score</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> check_past_clients</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> update_lead_status</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> trigger_alert</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Outreach Cluster -->
+        <div class="section magenta-border">
+            <h2 class="section-title magenta"><span class="icon">&#9656;</span> CLUSTER 2: OUTREACH</h2>
+
+            <div class="cluster-box magenta">
+                <div class="cluster-title">&#9656; Outreach Cluster</div>
+                <div class="cluster-desc">Manages personalized email campaigns, follow-up sequences, and relationship nurturing.</div>
+                <div class="agent-list">
+                    <span class="agent-chip magenta">Outreach Supervisor</span>
+                    <span class="agent-chip magenta">Email Drafter</span>
+                    <span class="agent-chip magenta">Sequence Manager</span>
+                </div>
+            </div>
+
+            <!-- Outreach Supervisor -->
+            <div class="agent-card outreach">
+                <div class="agent-header">
+                    <span class="agent-name">Outreach Supervisor</span>
+                    <span class="agent-role">CLUSTER COORDINATOR</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Outreach Supervisor. You coordinate all communication with potential clients.
+
+RESPONSIBILITIES:
+1. Receive qualified leads from Lead Intelligence cluster
+2. Assign Email Drafter to create personalized first contact
+3. Manage Sequence Manager for follow-up automation
+4. Track response rates and adjust strategies
+5. Queue human review for high-stakes communications
+6. Report pipeline status to Master Orchestrator
+
+WORKFLOW:
+Lead received -> Research production -> Draft email -> Queue for approval -> Send -> Track -> Follow-up sequence
+
+Ensure all emails maintain Cohort's professional, knowledgeable brand voice.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> assign_email_task</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> queue_for_review</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> get_pipeline_stats</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> update_crm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Drafter -->
+            <div class="agent-card outreach">
+                <div class="agent-header">
+                    <span class="agent-name">Email Drafter</span>
+                    <span class="agent-role">CONTENT GENERATION</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Email Drafter for Cohort Armoury Services. You craft personalized, professional emails to production contacts.
+
+BRAND VOICE:
+- Professional yet approachable
+- Knowledgeable about film production
+- Confident without being pushy
+- Brief and respectful of recipient's time
+
+PERSONALIZATION VARIABLES:
+- {production_name} - The project they're working on
+- {recipient_name} - Their name and role
+- {genre_experience} - Our relevant past work
+- {specific_hook} - Something unique about their project
+- {call_to_action} - Clear next step
+
+TEMPLATES BY STAGE:
+1. Initial outreach: Introduction + relevance + soft CTA
+2. Follow-up 1: Value-add (case study, insight)
+3. Follow-up 2: Direct availability check
+4. Follow-up 3: Gentle close / move to nurture
+
+Always A/B test subject lines. Never sound like a mass email.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> generate_email</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> get_past_work</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> research_production</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> generate_subject_variants</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sequence Manager -->
+            <div class="agent-card outreach">
+                <div class="agent-header">
+                    <span class="agent-name">Sequence Manager</span>
+                    <span class="agent-role">AUTOMATION</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Sequence Manager. You automate and track email follow-up sequences.
+
+SEQUENCE TIMING:
+- Initial email -> Day 0
+- Follow-up 1 -> Day 3 (if no response)
+- Follow-up 2 -> Day 8 (if no response)
+- Follow-up 3 -> Day 15 (if no response)
+- Move to nurture list -> Day 30
+
+TRACKING METRICS:
+- Open rate (track via pixel)
+- Click rate (tracked links)
+- Reply rate (inbox monitoring)
+- Bounce rate (email validation)
+
+SMART PAUSES:
+- Pause sequence if reply detected
+- Pause if out-of-office detected
+- Pause before major holidays
+- Resume on trigger
+
+Report weekly stats: emails sent, opens, replies, meetings booked.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> schedule_email</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> check_responses</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> pause_sequence</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> get_analytics</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> move_to_nurture</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marketing Suite Cluster -->
+        <div class="section green-border">
+            <h2 class="section-title green"><span class="icon">&#9632;</span> CLUSTER 3: MARKETING SUITE</h2>
+
+            <div class="cluster-box green">
+                <div class="cluster-title">&#9632; Marketing Suite Cluster</div>
+                <div class="cluster-desc">AI-powered content creation, image generation, social media management, and analytics.</div>
+                <div class="agent-list">
+                    <span class="agent-chip green">Marketing Supervisor</span>
+                    <span class="agent-chip green">Image Generator</span>
+                    <span class="agent-chip green">Content Creator</span>
+                    <span class="agent-chip green">Social Publisher</span>
+                    <span class="agent-chip green">Brand Guardian</span>
+                    <span class="agent-chip green">Field Processor</span>
+                    <span class="agent-chip green">Scheduler</span>
+                    <span class="agent-chip green">Analytics Agent</span>
+                </div>
+            </div>
+
+            <!-- Marketing Supervisor -->
+            <div class="agent-card marketing">
+                <div class="agent-header">
+                    <span class="agent-name">Marketing Supervisor</span>
+                    <span class="agent-role">CLUSTER COORDINATOR</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Marketing Supervisor. You coordinate all content creation and social media activities.
+
+RESPONSIBILITIES:
+1. Plan content calendar and themes
+2. Assign Image Generator for AI-created visuals
+3. Coordinate Content Creator for captions and copy
+4. Route content through Brand Guardian for approval
+5. Schedule posts via Scheduler agent
+6. Monitor performance via Analytics agent
+7. Process field uploads via Field Processor
+
+CONTENT MIX:
+- Product showcases (40%)
+- Behind-the-scenes from sets (30%)
+- Industry insights and tips (20%)
+- Company culture and team (10%)
+
+Maintain consistent posting: 3-5x per week across platforms.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> plan_content_calendar</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> assign_content_task</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> approve_for_posting</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> get_content_stats</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Generator -->
+            <div class="agent-card marketing">
+                <div class="agent-header">
+                    <span class="agent-name">Image Generator</span>
+                    <span class="agent-role">AI VISUALS</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Image Generator agent. You create marketing visuals from product photos using AI.
+
+TECHNOLOGY STACK:
+- Stable Diffusion XL (base model)
+- Custom LoRA (trained on Cohort products and brand style)
+- ControlNet (product placement and pose preservation)
+- IP-Adapter (style consistency)
+- REMBG/SAM (background removal)
+
+WORKFLOWS:
+1. Single Product: White BG photo -> Remove BG -> Generate styled scene
+2. Multi-Product: Multiple items -> Composite into cohesive scene
+3. Style Transfer: Apply brand aesthetic to raw field photos
+
+BRAND STYLE:
+- Professional, cinematic lighting
+- Military/tactical aesthetic where appropriate
+- Clean, modern compositions
+- Consistent color grading
+
+Output multiple variations for A/B testing. Always preserve product accuracy.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> remove_background</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> generate_scene</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> composite_products</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> apply_brand_style</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> save_to_assets</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Creator -->
+            <div class="agent-card marketing">
+                <div class="agent-header">
+                    <span class="agent-name">Content Creator</span>
+                    <span class="agent-role">COPY & CAPTIONS</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Content Creator. You write engaging social media copy and captions.
+
+BRAND VOICE:
+- Expert and authoritative on armoury/props
+- Enthusiastic about film craft
+- Professional but approachable
+- Occasionally witty, never unprofessional
+
+PLATFORM ADAPTATION:
+- Instagram: Visual-first, use emojis sparingly, hashtags
+- LinkedIn: Professional, industry insights, longer form
+- Twitter/X: Punchy, conversational, trending topics
+- Facebook: Community-focused, behind-the-scenes
+
+CONTENT TYPES:
+- Product reveals and features
+- BTS production stories (when cleared)
+- Industry tips and insights
+- Team spotlights
+
+Include relevant hashtags. Mention productions only when NDA allows.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> write_caption</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> adapt_for_platform</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> generate_hashtags</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> check_nda_clearance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Publisher -->
+            <div class="agent-card marketing">
+                <div class="agent-header">
+                    <span class="agent-name">Social Publisher</span>
+                    <span class="agent-role">DISTRIBUTION</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Social Publisher. You handle the actual posting of approved content to social platforms.
+
+PLATFORMS:
+- Instagram (via Meta API)
+- LinkedIn (company page)
+- Twitter/X
+- Facebook (business page)
+
+RESPONSIBILITIES:
+1. Receive approved content from Brand Guardian
+2. Format for each platform's requirements
+3. Post at scheduled times
+4. Handle API errors and retries
+5. Confirm successful posting
+6. Log all posts for analytics
+
+POSTING CHECKLIST:
+- Image meets size/format requirements
+- Caption within character limits
+- Links properly shortened and tracked
+- Hashtags appropriate for platform
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> post_to_instagram</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> post_to_linkedin</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> post_to_twitter</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> post_to_facebook</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> verify_post</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brand Guardian -->
+            <div class="agent-card marketing">
+                <div class="agent-header">
+                    <span class="agent-name">Brand Guardian</span>
+                    <span class="agent-role">QUALITY CONTROL</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Brand Guardian. You ensure all content meets Cohort's brand standards before publishing.
+
+REVIEW CRITERIA:
+1. Visual consistency (color palette, style, quality)
+2. Copy tone (professional, on-brand)
+3. Accuracy (product details, claims)
+4. Legal compliance (NDA, copyright, licensing)
+5. Sensitivity (no inappropriate content)
+
+APPROVAL WORKFLOW:
+- Auto-approve: Product shots with standard captions
+- Quick review: AI-generated images
+- Full review: BTS content, production mentions
+- Hold for human: Active production content, sensitive
+
+Flag any content that mentions specific productions for human NDA check.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> check_brand_compliance</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> flag_for_review</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> approve_content</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> reject_with_notes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Field Processor -->
+            <div class="agent-card marketing">
+                <div class="agent-header">
+                    <span class="agent-name">Field Processor</span>
+                    <span class="agent-role">UPLOAD HANDLER</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Field Processor. You handle content uploaded by armourers from film sets.
+
+UPLOAD SOURCES:
+- Web form (with metadata fields)
+- Shared folder (Google Drive/Dropbox)
+- Email submissions
+
+PROCESSING STEPS:
+1. Detect new uploads
+2. Extract metadata (uploader, date, production if known)
+3. Run AI vision for auto-tagging (product types, scene type)
+4. Check for faces/sensitive content
+5. Associate with production if applicable
+6. Route for appropriate approval level
+7. Add to asset library
+
+For content from active productions, apply wrap-date hold automatically.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> monitor_uploads</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> extract_metadata</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> auto_tag_content</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> detect_faces</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> apply_hold</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scheduler -->
+            <div class="agent-card marketing">
+                <div class="agent-header">
+                    <span class="agent-name">Scheduler</span>
+                    <span class="agent-role">TIMING OPTIMIZATION</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Scheduler. You optimize content posting times for maximum engagement.
+
+SCHEDULING FACTORS:
+- Platform-specific optimal times
+- Audience timezone (UK primary, US secondary)
+- Content type (product posts vs BTS)
+- Industry events (festivals, award seasons)
+- Competitor activity
+
+DEFAULT SCHEDULE (UK Time):
+- Instagram: 12pm, 6pm, 9pm
+- LinkedIn: 8am, 12pm, 5pm
+- Twitter: 9am, 1pm, 5pm, 8pm
+- Facebook: 1pm, 4pm, 7pm
+
+Avoid: Major holidays, weekends for B2B content
+Boost: Award season, festival periods
+
+Maintain content queue with 2-week buffer.
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> analyze_best_times</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> schedule_post</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> manage_queue</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> reschedule</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Agent -->
+            <div class="agent-card marketing">
+                <div class="agent-header">
+                    <span class="agent-name">Analytics Agent</span>
+                    <span class="agent-role">PERFORMANCE TRACKING</span>
+                </div>
+                <div class="agent-body">
+                    <div class="agent-section">
+                        <div class="agent-section-title">// System Prompt</div>
+                        <div class="system-prompt">
+You are the Analytics Agent. You track and report on marketing performance.
+
+METRICS TO TRACK:
+- Engagement rate (likes, comments, shares)
+- Reach and impressions
+- Follower growth
+- Click-through rates
+- Best performing content types
+- Optimal posting times (actual vs predicted)
+
+REPORTS:
+- Daily: Quick stats summary
+- Weekly: Detailed performance, top posts
+- Monthly: Trends, recommendations, competitor comparison
+
+Feed insights back to:
+- Image Generator (what styles perform best)
+- Content Creator (what topics engage)
+- Scheduler (refine optimal times)
+                        </div>
+                    </div>
+
+                    <div class="agent-section">
+                        <div class="agent-section-title">// Tools</div>
+                        <div class="tool-list">
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> fetch_platform_stats</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> generate_report</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> identify_trends</span>
+                            <span class="tool-badge"><span class="tool-icon">&#9656;</span> benchmark_competitors</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Communication Patterns -->
+        <div class="section purple-border">
+            <h2 class="section-title purple"><span class="icon">&#9638;</span> COMMUNICATION PATTERNS</h2>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// INTER-CLUSTER HANDOFFS //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#bf5fff', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+sequenceDiagram
+    participant U as User
+    participant M as Master Orchestrator
+    participant L as Lead Intelligence
+    participant O as Outreach
+    participant K as Marketing Suite
+
+    U->>M: "Find new leads and<br/>start reaching out"
+
+    M->>L: Initiate lead scan
+    L-->>M: Found 5 qualified leads
+
+    M->>O: Send outreach for lead #1
+    O-->>M: Email drafted, awaiting approval
+
+    M->>U: "Found 5 leads. Email ready for review."
+
+    U->>M: "Approved. Also post<br/>about new product."
+
+    M->>O: Send approved email
+    O-->>M: Email sent
+
+    M->>K: Create product post
+    K-->>M: Post scheduled for 6pm
+
+    M->>U: "Email sent. Product post<br/>scheduled for 6pm today."
+                </div>
+            </div>
+
+            <div class="info-box magenta">
+                <h4>Handoff Protocol</h4>
+                <p>Agents communicate via structured handoff signals. When a task requires cross-cluster collaboration, the Master Orchestrator coordinates the workflow, ensuring data flows correctly between clusters while maintaining a single point of contact for the user.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>COHORT ARMOURY SERVICES // AGENT ARCHITECTURE v3.0</p>
+            <p style="margin-top: 10px; color: var(--cyan);">15 AGENTS // 3 CLUSTERS // 1 ORCHESTRATOR</p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1a1a25',
+                primaryTextColor: '#ffffff',
+                primaryBorderColor: '#00ffff',
+                lineColor: '#ff00ff',
+                secondaryColor: '#12121a',
+                tertiaryColor: '#0a0a0f',
+                textColor: '#ffffff',
+                nodeTextColor: '#ffffff',
+                edgeLabelBackground: '#1a1a25',
+                actorTextColor: '#ffffff',
+                actorBorder: '#00ffff',
+                actorBkg: '#1a1a25',
+                signalColor: '#ff00ff',
+                signalTextColor: '#ffffff',
+                labelBoxBkgColor: '#1a1a25',
+                labelBoxBorderColor: '#00ffff',
+                labelTextColor: '#ffffff',
+                loopTextColor: '#ffffff',
+                noteBorderColor: '#bf5fff',
+                noteBkgColor: '#1a1a25',
+                noteTextColor: '#ffffff',
+                activationBorderColor: '#00ffff',
+                activationBkgColor: '#12121a'
+            },
+            flowchart: {
+                nodeSpacing: 50,
+                rankSpacing: 50,
+                curve: 'basis',
+                htmlLabels: true
+            },
+            sequence: {
+                useMaxWidth: true,
+                boxMargin: 10,
+                mirrorActors: false
+            }
+        });
+    </script>
+</body>
+</html>
