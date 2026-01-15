@@ -695,8 +695,27 @@
         /* Responsive */
         @media (max-width: 768px) {
             .header h1 { font-size: 1.8rem; }
+            .header .subtitle { font-size: 0.9rem; letter-spacing: 1px; }
             .section { padding: 20px; }
             .agent-header { flex-direction: column; gap: 10px; text-align: center; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .info-box { padding: 15px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 20px 10px; }
+            .header { padding: 25px 15px; }
+            .header h1 { font-size: 1.4rem; }
+            .header .subtitle { font-size: 0.8rem; }
+            .header .version { font-size: 0.75rem; }
+            .section { padding: 15px; }
+            .section-title { font-size: 1.2rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .agent-card { margin: 15px 0; }
+            .agent-body { padding: 15px; }
+            .system-prompt { font-size: 0.85rem; padding: 12px 15px; }
+            .tool-badge { padding: 5px 10px; font-size: 0.8rem; }
+            .cluster-box { padding: 15px; }
         }
 
         /* Feature list */
