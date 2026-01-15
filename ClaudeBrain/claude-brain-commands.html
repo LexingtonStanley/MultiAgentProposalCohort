@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaudesBrain - Agentic Brain Map -- Commands Reference</title>
+
+    <!-- Open Graph / WhatsApp / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ClaudesBrain - Agentic Brain Map -- Commands Reference">
+    <meta property="og:description" content="24 slash commands with arguments, allowed tools, and usage patterns for orchestration and automation">
+    <meta property="og:site_name" content="ClaudesBrain">
+    <meta property="og:url" content="https://cohort.packfamily.dog/ClaudesBrain/commands">
+    <meta property="og:image" content="https://cohort.packfamily.dog/ClaudeBrain/brain-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ClaudesBrain - Agentic Brain Map -- Commands Reference">
+    <meta name="twitter:description" content="24 slash commands with arguments, allowed tools, and usage patterns">
+    <meta name="twitter:image" content="https://cohort.packfamily.dog/ClaudeBrain/brain-preview.png">
+
+    <!-- Standard Meta -->
+    <meta name="description" content="24 slash commands with arguments, allowed tools, and usage patterns for orchestration and automation">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050508;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --bg-elevated: #1a1a25;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --purple: #bf5fff;
+            --green: #00ff88;
+            --yellow: #ffff00;
+            --red: #ff3366;
+            --orange: #ff8800;
+            --blue: #4444ff;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-dim: #666666;
+            --border: rgba(255,255,255,0.1);
+            --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.3);
+            --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.3);
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--green) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float1 15s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--cyan) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            animation: float2 18s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--magenta) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float3 12s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-50px, 30px) scale(1.1); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.15); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.03),
+                rgba(0, 0, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 255, 0.1));
+            border: 1px solid var(--green);
+            border-radius: 10px;
+            box-shadow: var(--glow-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(0, 255, 136, 0.1) 50%,
+                transparent 60%
+            );
+            animation: headerShine 3s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--green), var(--cyan), var(--green));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 3s linear infinite;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .header .subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--green);
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .version {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--cyan);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+        }
+
+        .section.cyan-border { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); }
+        .section.green-border { border-color: var(--green); box-shadow: var(--glow-green); }
+        .section.green-border::before { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+        .section.purple-border { border-color: var(--purple); box-shadow: 0 0 15px rgba(191, 95, 255, 0.2); }
+        .section.purple-border::before { background: linear-gradient(90deg, var(--purple), var(--magenta)); }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title.cyan { color: var(--cyan); }
+        .section-title.green { color: var(--green); }
+        .section-title.purple { color: var(--purple); }
+        .section-title .icon { font-size: 1.8rem; }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--cyan);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            text-shadow: var(--glow-cyan);
+        }
+
+        h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: var(--green); margin-top: 25px; margin-bottom: 15px; }
+        p { margin-bottom: 15px; font-size: 1.05rem; color: var(--text-secondary); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: var(--green);
+            box-shadow: var(--glow-green);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--green);
+            margin-bottom: 5px;
+        }
+
+        .stat-box.cyan .stat-value { color: var(--cyan); }
+        .stat-box.purple .stat-value { color: var(--purple); }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .command-card {
+            background: var(--bg-darker);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+        }
+
+        .command-card.green { border-left: 4px solid var(--green); }
+        .command-card.cyan { border-left: 4px solid var(--cyan); }
+        .command-card.purple { border-left: 4px solid var(--purple); }
+        .command-card.blue { border-left: 4px solid var(--blue); }
+
+        .command-card:hover.green { border-color: var(--green); box-shadow: var(--glow-green); }
+        .command-card:hover.cyan { border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+
+        .command-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: var(--green);
+            margin-bottom: 10px;
+        }
+
+        .command-card.cyan .command-name { color: var(--cyan); }
+        .command-card.purple .command-name { color: var(--purple); }
+        .command-card.blue .command-name { color: var(--blue); }
+
+        .command-desc {
+            color: var(--text-secondary);
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            margin: 5px 5px 5px 0;
+        }
+
+        .badge.cyan { background: rgba(0, 255, 255, 0.15); border: 1px solid var(--cyan); color: var(--cyan); }
+        .badge.green { background: rgba(0, 255, 136, 0.15); border: 1px solid var(--green); color: var(--green); }
+        .badge.purple { background: rgba(191, 95, 255, 0.15); border: 1px solid var(--purple); color: var(--purple); }
+        .badge.magenta { background: rgba(255, 0, 255, 0.15); border: 1px solid var(--magenta); color: var(--magenta); }
+        .badge.blue { background: rgba(68, 68, 255, 0.15); border: 1px solid var(--blue); color: var(--blue); }
+        .badge.yellow { background: rgba(255, 255, 0, 0.15); border: 1px solid var(--yellow); color: var(--yellow); }
+
+        .info-box {
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 4px solid var(--cyan);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box.green { background: rgba(0, 255, 136, 0.05); border-left-color: var(--green); }
+        .info-box h4 { font-family: 'Orbitron', sans-serif; color: var(--cyan); margin-bottom: 10px; margin-top: 0; }
+        .info-box.green h4 { color: var(--green); }
+        .info-box p { color: var(--text-secondary); margin: 0; }
+
+        .footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 60px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .section { padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="scanlines"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>COMMAND REFERENCE</h1>
+            <div class="subtitle">CLAUDE CODE BRAIN // 24 ORCHESTRATION COMMANDS</div>
+            <div class="version">VERSION 1.0 // AUTO-GENERATED</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="section green-border">
+            <h2 class="section-title green">
+                <span class="icon">&#9679;</span> COMMAND STATISTICS
+            </h2>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Total Commands</div>
+                </div>
+                <div class="stat-box cyan">
+                    <div class="stat-value">17</div>
+                    <div class="stat-label">Core Commands</div>
+                </div>
+                <div class="stat-box purple">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">Crypto Prompts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Development Commands -->
+        <div class="section green-border">
+            <h2 class="section-title green">
+                <span class="icon">&#9733;</span> DEVELOPMENT & ORCHESTRATION COMMANDS
+            </h2>
+
+            <div class="command-card green">
+                <h3 class="command-name">/ralph [N]</h3>
+                <p class="command-desc">Autonomous PRD loop that implements user stories from prd.json. Runs code-architect (first story only), coder, and code-reviewer in sequence. Commits on passing quality gates. Continues until all stories pass or max iterations reached.</p>
+                <div>
+                    <span class="badge green">Autonomous</span>
+                    <span class="badge cyan">code-architect</span>
+                    <span class="badge cyan">coder</span>
+                    <span class="badge cyan">code-reviewer</span>
+                    <span class="badge magenta">Git Commits</span>
+                </div>
+                <p style="margin-top: 15px; color: var(--text-dim); font-size: 0.95rem;"><strong>Args:</strong> N = max iterations (optional)</p>
+            </div>
+
+            <div class="command-card green">
+                <h3 class="command-name">/prd</h3>
+                <p class="command-desc">Generate a Product Requirements Document (PRD) in markdown format. Captures feature requirements, success criteria, technical considerations, and dependencies. Use when planning features or starting new projects.</p>
+                <div>
+                    <span class="badge green">Planning</span>
+                    <span class="badge purple">Documentation</span>
+                    <span class="badge magenta">Markdown Output</span>
+                </div>
+            </div>
+
+            <div class="command-card green">
+                <h3 class="command-name">/userstories</h3>
+                <p class="command-desc">Convert a PRD markdown file to prd.json format for Ralph autonomous execution. Extracts user stories, acceptance criteria, and technical requirements into structured JSON.</p>
+                <div>
+                    <span class="badge green">Conversion</span>
+                    <span class="badge cyan">MD → JSON</span>
+                    <span class="badge magenta">Ralph Input</span>
+                </div>
+            </div>
+
+            <div class="command-card green">
+                <h3 class="command-name">/cook</h3>
+                <p class="command-desc">Run 7 specialized sub-agent tasks simultaneously in parallel for comprehensive project analysis and implementation. Full research and code execution.</p>
+                <div>
+                    <span class="badge green">Parallel</span>
+                    <span class="badge cyan">7 Sub-Agents</span>
+                    <span class="badge magenta">Implementation</span>
+                </div>
+            </div>
+
+            <div class="command-card green">
+                <h3 class="command-name">/cook_research_only</h3>
+                <p class="command-desc">Research-focused variant of /cook. Runs 7 sub-agent tasks in parallel but focuses on analysis without code execution.</p>
+                <div>
+                    <span class="badge green">Parallel</span>
+                    <span class="badge cyan">7 Sub-Agents</span>
+                    <span class="badge purple">Research Only</span>
+                </div>
+            </div>
+
+            <div class="command-card green">
+                <h3 class="command-name">/sentient</h3>
+                <p class="command-desc">Demonstration command showing rm -rf hook blocking capabilities. Showcases the safety features of the PreToolUse hook system.</p>
+                <div>
+                    <span class="badge yellow">Safety Demo</span>
+                    <span class="badge cyan">Hook System</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Context & Analysis Commands -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan">
+                <span class="icon">&#9670;</span> CONTEXT & ANALYSIS COMMANDS
+            </h2>
+
+            <div class="command-card cyan">
+                <h3 class="command-name">/prime</h3>
+                <p class="command-desc">Load project context by analyzing codebase structure, README, documentation files, and AGENTS.md. Essential first step for new agent sessions on existing projects.</p>
+                <div>
+                    <span class="badge cyan">Context Loading</span>
+                    <span class="badge green">README</span>
+                    <span class="badge green">Docs</span>
+                    <span class="badge magenta">AGENTS.md</span>
+                </div>
+            </div>
+
+            <div class="command-card cyan">
+                <h3 class="command-name">/prime_tts</h3>
+                <p class="command-desc">Prime project context with TTS audio announcement. Combines /prime functionality with text-to-speech notification of loaded context.</p>
+                <div>
+                    <span class="badge cyan">Context Loading</span>
+                    <span class="badge yellow">TTS</span>
+                    <span class="badge green">Audio Feedback</span>
+                </div>
+            </div>
+
+            <div class="command-card cyan">
+                <h3 class="command-name">/git_status</h3>
+                <p class="command-desc">Comprehensive Git repository state analysis. Shows current branch, uncommitted changes, recent commits, and provides recommendations for next actions.</p>
+                <div>
+                    <span class="badge cyan">Git</span>
+                    <span class="badge green">Status</span>
+                    <span class="badge magenta">Recommendations</span>
+                </div>
+            </div>
+
+            <div class="command-card cyan">
+                <h3 class="command-name">/question</h3>
+                <p class="command-desc">Answer questions about the project structure and documentation without performing any coding operations. Pure analysis and Q&A mode.</p>
+                <div>
+                    <span class="badge cyan">Q&A</span>
+                    <span class="badge purple">Read-Only</span>
+                    <span class="badge green">No Coding</span>
+                </div>
+            </div>
+
+            <div class="command-card cyan">
+                <h3 class="command-name">/no_black_box</h3>
+                <p class="command-desc">Reverse-engineer existing projects into standardized documentation. Extracts architecture, agents, tools, relationships, and flows from code. Outputs as Markdown or stunning HTML with Neon Docs styling.</p>
+                <div>
+                    <span class="badge cyan">Analysis</span>
+                    <span class="badge purple">Documentation</span>
+                    <span class="badge magenta">MD/HTML Output</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Utility Commands -->
+        <div class="section purple-border">
+            <h2 class="section-title purple">
+                <span class="icon">&#9632;</span> UTILITY COMMANDS
+            </h2>
+
+            <div class="command-card purple">
+                <h3 class="command-name">/docker</h3>
+                <p class="command-desc">Check Docker daemon status and automatically start Docker Desktop if not running. Ensures Docker is ready for containerized development.</p>
+                <div>
+                    <span class="badge purple">Docker</span>
+                    <span class="badge cyan">Status Check</span>
+                    <span class="badge green">Auto-Start</span>
+                </div>
+            </div>
+
+            <div class="command-card purple">
+                <h3 class="command-name">/concious_prompt</h3>
+                <p class="command-desc">Transform stream-of-consciousness text into clear, effective prompts. Helps structure vague ideas into actionable agent instructions.</p>
+                <div>
+                    <span class="badge purple">Prompt Engineering</span>
+                    <span class="badge cyan">Transformation</span>
+                    <span class="badge magenta">Clarity</span>
+                </div>
+            </div>
+
+            <div class="command-card purple">
+                <h3 class="command-name">/all_tools</h3>
+                <p class="command-desc">List all available tools in the Claude Code toolkit. Displays tools from core system, plugins, and MCP servers.</p>
+                <div>
+                    <span class="badge purple">Reference</span>
+                    <span class="badge cyan">Tools</span>
+                    <span class="badge green">Discovery</span>
+                </div>
+            </div>
+
+            <div class="command-card purple">
+                <h3 class="command-name">/update_status_line</h3>
+                <p class="command-desc">Update status line configuration data. Modifies the session status display shown in the terminal.</p>
+                <div>
+                    <span class="badge purple">Configuration</span>
+                    <span class="badge cyan">Status Line</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crypto Commands -->
+        <div class="section green-border">
+            <h2 class="section-title green">
+                <span class="icon">&#9733;</span> CRYPTOCURRENCY RESEARCH COMMANDS
+            </h2>
+
+            <div class="info-box green">
+                <h4>Parallel Execution Model</h4>
+                <p>Crypto research commands execute 12 agents in parallel across 3 model tiers (haiku/sonnet/opus) for comprehensive, multi-perspective analysis. Results saved to outputs/&lt;timestamp&gt;/</p>
+            </div>
+
+            <div class="command-card green">
+                <h3 class="command-name">/crypto_research [SYMBOL]</h3>
+                <p class="command-desc">Execute comprehensive cryptocurrency research using all 12 crypto agents in parallel. Includes market analysis, individual coin analysis, macro correlations, and investment opportunities across all 3 model tiers.</p>
+                <div>
+                    <span class="badge blue">12 Agents</span>
+                    <span class="badge cyan">Parallel</span>
+                    <span class="badge green">Full Analysis</span>
+                    <span class="badge purple">3 Model Tiers</span>
+                </div>
+                <p style="margin-top: 15px; color: var(--text-dim); font-size: 0.95rem;"><strong>Args:</strong> SYMBOL = crypto ticker (e.g., BTC, ETH)</p>
+            </div>
+
+            <div class="command-card green">
+                <h3 class="command-name">/crypto_research_haiku [SYMBOL]</h3>
+                <p class="command-desc">Lightweight cryptocurrency research using only haiku model tier agents. Fast, cost-effective analysis for quick insights.</p>
+                <div>
+                    <span class="badge blue">Haiku Only</span>
+                    <span class="badge cyan">Fast</span>
+                    <span class="badge green">Cost-Effective</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crypto Agent Prompts -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan">
+                <span class="icon">&#9670;</span> CRYPTO AGENT PROMPT COMMANDS (7)
+            </h2>
+
+            <div class="info-box">
+                <h4>Direct Agent Invocation</h4>
+                <p>These commands directly invoke specific crypto agent system prompts. Useful for targeted analysis of specific aspects.</p>
+            </div>
+
+            <div class="command-card blue">
+                <h3 class="command-name">crypto_coin_analyzer_agent_prompt</h3>
+                <p class="command-desc">Individual cryptocurrency analysis prompt covering price action, news sentiment, technical indicators, and fundamental metrics.</p>
+                <div>
+                    <span class="badge blue">Single Coin</span>
+                    <span class="badge cyan">Price</span>
+                    <span class="badge cyan">News</span>
+                    <span class="badge cyan">Technicals</span>
+                </div>
+            </div>
+
+            <div class="command-card blue">
+                <h3 class="command-name">crypto_market_agent_prompt</h3>
+                <p class="command-desc">Top N cryptocurrency market overview prompt. Analyzes overall market trends and sector performance.</p>
+                <div>
+                    <span class="badge blue">Market</span>
+                    <span class="badge cyan">Trends</span>
+                    <span class="badge cyan">Sectors</span>
+                </div>
+            </div>
+
+            <div class="command-card blue">
+                <h3 class="command-name">crypto_investment_plays_agent_prompt</h3>
+                <p class="command-desc">Actionable investment opportunities prompt with risk/reward analysis and entry/exit strategies.</p>
+                <div>
+                    <span class="badge blue">Opportunities</span>
+                    <span class="badge green">Risk Analysis</span>
+                    <span class="badge green">Strategies</span>
+                </div>
+            </div>
+
+            <div class="command-card blue">
+                <h3 class="command-name">crypto_movers_agent_prompt</h3>
+                <p class="command-desc">Biggest gainers and losers tracking prompt. Monitors momentum plays and potential reversals.</p>
+                <div>
+                    <span class="badge blue">Movers</span>
+                    <span class="badge yellow">Gainers</span>
+                    <span class="badge yellow">Losers</span>
+                </div>
+            </div>
+
+            <div class="command-card blue">
+                <h3 class="command-name">crypto_news_scanner_agent_prompt</h3>
+                <p class="command-desc">Cryptocurrency news scanning and sentiment analysis prompt. Aggregates breaking news and market sentiment.</p>
+                <div>
+                    <span class="badge blue">News</span>
+                    <span class="badge cyan">Sentiment</span>
+                    <span class="badge cyan">Real-Time</span>
+                </div>
+            </div>
+
+            <div class="command-card blue">
+                <h3 class="command-name">crypto_price_check_agent_prompt</h3>
+                <p class="command-desc">Real-time cryptocurrency price checking prompt. Monitors current prices and recent price action.</p>
+                <div>
+                    <span class="badge blue">Price</span>
+                    <span class="badge cyan">Real-Time</span>
+                    <span class="badge cyan">Monitoring</span>
+                </div>
+            </div>
+
+            <div class="command-card blue">
+                <h3 class="command-name">macro_crypto_correlation_scanner_agent_prompt</h3>
+                <p class="command-desc">Federal Reserve policy, inflation data, and traditional market correlation analysis prompt for cryptocurrency.</p>
+                <div>
+                    <span class="badge blue">Macro</span>
+                    <span class="badge cyan">Fed Policy</span>
+                    <span class="badge cyan">Inflation</span>
+                    <span class="badge cyan">Correlations</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>CLAUDE CODE BRAIN // COMMAND REFERENCE // 24 Orchestration Commands</p>
+            <p style="margin-top: 10px;"><a href="claude-brain-overview.html" style="color: var(--cyan);">← Back to Overview</a></p>
+        </div>
+    </div>
+
+    <script>
+        // No Mermaid needed for this page, but keeping initialization for consistency
+        if (typeof mermaid !== 'undefined') {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'dark'
+            });
+        }
+    </script>
+</body>
+</html>

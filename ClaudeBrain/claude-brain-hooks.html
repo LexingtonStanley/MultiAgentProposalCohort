@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaudesBrain - Agentic Brain Map -- Hook System</title>
+
+    <!-- Open Graph / WhatsApp / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ClaudesBrain - Agentic Brain Map -- Hook System">
+    <meta property="og:description" content="8 Python hooks with TTS/LLM utilities, lifecycle events, safety blocks, and notification systems">
+    <meta property="og:site_name" content="ClaudesBrain">
+    <meta property="og:url" content="https://cohort.packfamily.dog/ClaudesBrain/hooks">
+    <meta property="og:image" content="https://cohort.packfamily.dog/ClaudeBrain/brain-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ClaudesBrain - Agentic Brain Map -- Hook System">
+    <meta name="twitter:description" content="8 Python hooks with TTS/LLM utilities, lifecycle events, and notification systems">
+    <meta name="twitter:image" content="https://cohort.packfamily.dog/ClaudeBrain/brain-preview.png">
+
+    <!-- Standard Meta -->
+    <meta name="description" content="8 Python hooks with TTS/LLM utilities, lifecycle events, safety blocks, and notification systems">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050508;
+            --bg-card: #12121a;
+            --bg-elevated: #1a1a25;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --purple: #bf5fff;
+            --green: #00ff88;
+            --yellow: #ffff00;
+            --orange: #ff8800;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-dim: #666666;
+            --border: rgba(255,255,255,0.1);
+            --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.3);
+            --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.3);
+            --glow-yellow: 0 0 20px rgba(255, 255, 0, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--yellow) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float1 15s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--orange) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            animation: float2 18s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--magenta) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float3 12s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-50px, 30px) scale(1.1); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.15); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.03),
+                rgba(0, 0, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(255, 255, 0, 0.1), rgba(255, 136, 0, 0.1));
+            border: 1px solid var(--yellow);
+            border-radius: 10px;
+            box-shadow: var(--glow-yellow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(255, 255, 0, 0.1) 50%,
+                transparent 60%
+            );
+            animation: headerShine 3s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 3s linear infinite;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .header .subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--yellow);
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .version {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--orange);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--yellow), var(--orange));
+        }
+
+        .section.yellow-border { border-color: var(--yellow); box-shadow: var(--glow-yellow); }
+        .section.cyan-border { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); }
+        .section.cyan-border::before { background: linear-gradient(90deg, var(--cyan), var(--magenta)); }
+        .section.magenta-border { border-color: var(--magenta); box-shadow: var(--glow-magenta); }
+        .section.magenta-border::before { background: linear-gradient(90deg, var(--magenta), var(--purple)); }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title.yellow { color: var(--yellow); }
+        .section-title.cyan { color: var(--cyan); }
+        .section-title.magenta { color: var(--magenta); }
+        .section-title .icon { font-size: 1.8rem; }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--yellow);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            text-shadow: var(--glow-yellow);
+        }
+
+        h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: var(--orange); margin-top: 25px; margin-bottom: 15px; }
+        p { margin-bottom: 15px; font-size: 1.05rem; color: var(--text-secondary); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: var(--yellow);
+            box-shadow: var(--glow-yellow);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--yellow);
+            margin-bottom: 5px;
+        }
+
+        .stat-box.cyan .stat-value { color: var(--cyan); }
+        .stat-box.magenta .stat-value { color: var(--magenta); }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hook-card {
+            background: var(--bg-darker);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .hook-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+        }
+
+        .hook-card.yellow { border-left: 4px solid var(--yellow); }
+        .hook-card.cyan { border-left: 4px solid var(--cyan); }
+        .hook-card.magenta { border-left: 4px solid var(--magenta); }
+
+        .hook-card:hover.yellow { border-color: var(--yellow); box-shadow: var(--glow-yellow); }
+        .hook-card:hover.cyan { border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+        .hook-card:hover.magenta { border-color: var(--magenta); box-shadow: var(--glow-magenta); }
+
+        .hook-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: var(--yellow);
+            margin-bottom: 10px;
+        }
+
+        .hook-card.cyan .hook-name { color: var(--cyan); }
+        .hook-card.magenta .hook-name { color: var(--magenta); }
+
+        .hook-desc {
+            color: var(--text-secondary);
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            margin: 5px 5px 5px 0;
+        }
+
+        .badge.cyan { background: rgba(0, 255, 255, 0.15); border: 1px solid var(--cyan); color: var(--cyan); }
+        .badge.magenta { background: rgba(255, 0, 255, 0.15); border: 1px solid var(--magenta); color: var(--magenta); }
+        .badge.yellow { background: rgba(255, 255, 0, 0.15); border: 1px solid var(--yellow); color: var(--yellow); }
+        .badge.orange { background: rgba(255, 136, 0, 0.15); border: 1px solid var(--orange); color: var(--orange); }
+        .badge.purple { background: rgba(191, 95, 255, 0.15); border: 1px solid var(--purple); color: var(--purple); }
+        .badge.green { background: rgba(0, 255, 136, 0.15); border: 1px solid var(--green); color: var(--green); }
+
+        .feature-list { list-style: none; padding: 0; }
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+        .feature-list li::before {
+            content: '//';
+            position: absolute;
+            left: 0;
+            color: var(--yellow);
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+        }
+
+        .pipeline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pipeline-stage {
+            background: var(--bg-darker);
+            border: 2px solid var(--cyan);
+            border-radius: 8px;
+            padding: 15px 25px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .pipeline-stage.yellow { border-color: var(--yellow); }
+        .pipeline-stage.magenta { border-color: var(--magenta); }
+        .pipeline-stage.orange { border-color: var(--orange); }
+
+        .pipeline-stage .stage-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--cyan);
+            margin-bottom: 5px;
+        }
+
+        .pipeline-stage.yellow .stage-name { color: var(--yellow); }
+        .pipeline-stage.magenta .stage-name { color: var(--magenta); }
+        .pipeline-stage.orange .stage-name { color: var(--orange); }
+
+        .pipeline-stage .stage-desc { font-size: 0.85rem; color: var(--text-dim); }
+        .pipeline-arrow { font-size: 1.5rem; color: var(--yellow); }
+
+        .info-box {
+            background: rgba(255, 255, 0, 0.05);
+            border-left: 4px solid var(--yellow);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box.cyan { background: rgba(0, 255, 255, 0.05); border-left-color: var(--cyan); }
+        .info-box.magenta { background: rgba(255, 0, 255, 0.05); border-left-color: var(--magenta); }
+        .info-box h4 { font-family: 'Orbitron', sans-serif; color: var(--yellow); margin-bottom: 10px; margin-top: 0; }
+        .info-box.cyan h4 { color: var(--cyan); }
+        .info-box.magenta h4 { color: var(--magenta); }
+        .info-box p { color: var(--text-secondary); margin: 0; }
+
+        .diagram-container {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 25px 0;
+            overflow-x: auto;
+            cursor: zoom-in;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .diagram-container:hover {
+            border-color: var(--cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .diagram-container::after {
+            content: '[ CLICK TO EXPAND ]';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .diagram-container:hover::after { opacity: 1; color: var(--cyan); }
+
+        .diagram-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--magenta);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .mermaid { background: transparent !important; }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 8, 0.95);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            cursor: zoom-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-overlay.active { display: flex; }
+
+        .lightbox-content {
+            max-width: 95vw;
+            max-height: 95vh;
+            overflow: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.3), 0 0 100px rgba(255, 0, 255, 0.1);
+            cursor: default;
+        }
+
+        .lightbox-content .mermaid,
+        .lightbox-content .diagram-container {
+            transform: scale(1.5);
+            transform-origin: top center;
+            margin-bottom: 30%;
+        }
+
+        .lightbox-close {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--bg-card);
+            border: 2px solid var(--cyan);
+            border-radius: 50%;
+            color: var(--cyan);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10001;
+        }
+
+        .lightbox-close:hover {
+            background: var(--cyan);
+            color: var(--bg-dark);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .lightbox-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            background: var(--bg-card);
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 60px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .section { padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .pipeline { flex-direction: column; }
+            .pipeline-arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="scanlines"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>HOOK SYSTEM</h1>
+            <div class="subtitle">CLAUDE CODE BRAIN // LIFECYCLE EVENT HANDLERS</div>
+            <div class="version">VERSION 1.0 // AUTO-GENERATED</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="section yellow-border">
+            <h2 class="section-title yellow">
+                <span class="icon">&#9733;</span> HOOK STATISTICS
+            </h2>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Python Hooks</div>
+                </div>
+                <div class="stat-box cyan">
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">TTS/LLM Utilities</div>
+                </div>
+                <div class="stat-box magenta">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">TTS Providers</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>UV Single-File Scripts</h4>
+                <p>All hooks use <strong>uv</strong> single-file script format with inline dependencies (/// script format). This ensures consistent dependency management and Python version control.</p>
+            </div>
+        </div>
+
+        <!-- Hook Lifecycle Diagram -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan">
+                <span class="icon">&#9670;</span> HOOK LIFECYCLE
+            </h2>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// HOOK EXECUTION FLOW //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#00ffff', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+sequenceDiagram
+    participant User
+    participant SessionStart
+    participant UserPromptSubmit
+    participant PreToolUse
+    participant Claude
+    participant PostToolUse
+    participant Notification
+    participant Stop
+    participant SubagentStop
+
+    User->>SessionStart: Start CLI
+    SessionStart->>SessionStart: Initialize session
+    SessionStart->>SessionStart: Generate agent name
+
+    User->>UserPromptSubmit: Submit prompt
+    UserPromptSubmit->>UserPromptSubmit: Log prompt
+    UserPromptSubmit->>UserPromptSubmit: Update session data
+
+    Claude->>PreToolUse: Before each tool
+    PreToolUse->>PreToolUse: Check dangerous commands
+    PreToolUse->>PreToolUse: Log tool usage
+    alt Blocked
+        PreToolUse-->>Claude: Block execution
+    else Allowed
+        PreToolUse-->>Claude: Continue
+        Claude->>PostToolUse: After tool completion
+        PostToolUse->>PostToolUse: Log completion
+    end
+
+    Claude->>Notification: Request user input
+    Notification->>TTS: Generate audio
+    TTS-->>Notification: Play announcement
+
+    alt Sub-agent completes
+        Claude->>SubagentStop: Sub-agent done
+        SubagentStop->>TTS: Completion announcement
+    end
+
+    User->>Stop: End session
+    Stop->>Stop: Copy transcript
+    Stop->>TTS: Final summary
+    Stop->>LLM: Generate message
+                </div>
+            </div>
+
+            <div class="info-box cyan">
+                <h4>Hook Types</h4>
+                <p>Hooks intercept specific lifecycle events:</p>
+                <ul class="feature-list">
+                    <li><strong>Pre-Hooks:</strong> Execute before actions (PreToolUse, PreCompact)</li>
+                    <li><strong>Post-Hooks:</strong> Execute after actions (PostToolUse, Stop, SubagentStop)</li>
+                    <li><strong>Event-Hooks:</strong> Triggered by events (UserPromptSubmit, Notification, SessionStart)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Core Hooks -->
+        <div class="section yellow-border">
+            <h2 class="section-title yellow">
+                <span class="icon">&#9830;</span> CORE HOOKS (8)
+            </h2>
+
+            <div class="hook-card yellow">
+                <h3 class="hook-name">PreToolUse (pre_tool_use.py)</h3>
+                <p class="hook-desc">Safety-critical hook that intercepts tool usage before execution. Blocks dangerous commands, warns on sensitive file access, and logs all tool invocations.</p>
+                <div>
+                    <span class="badge yellow">Safety</span>
+                    <span class="badge orange">Blocking</span>
+                    <span class="badge cyan">Logging</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Blocks <code>rm -rf</code> and other destructive commands</li>
+                    <li>Warns when accessing .env files</li>
+                    <li>Logs all tool usage to logs/pre_tool_use.json</li>
+                    <li>Timestamps and tool parameter capture</li>
+                </ul>
+            </div>
+
+            <div class="hook-card cyan">
+                <h3 class="hook-name">PostToolUse (post_tool_use.py)</h3>
+                <p class="hook-desc">Post-execution logging hook that records tool completion events. Tracks successful executions and their results.</p>
+                <div>
+                    <span class="badge cyan">Logging</span>
+                    <span class="badge green">Completion</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Logs tool completion to logs/post_tool_use.json</li>
+                    <li>Captures execution time and results</li>
+                </ul>
+            </div>
+
+            <div class="hook-card yellow">
+                <h3 class="hook-name">UserPromptSubmit (user_prompt_submit.py)</h3>
+                <p class="hook-desc">Session management hook triggered on every user prompt. Manages session data, generates agent names, and logs user interactions.</p>
+                <div>
+                    <span class="badge yellow">Session</span>
+                    <span class="badge cyan">Logging</span>
+                    <span class="badge magenta">Agent Naming</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Logs user prompts to logs/user_prompt_submit.json</li>
+                    <li>Maintains session data in session_data.json</li>
+                    <li>Generates creative agent names via Ollama → Anthropic fallback</li>
+                    <li>Tracks prompt history and session context</li>
+                </ul>
+            </div>
+
+            <div class="hook-card magenta">
+                <h3 class="hook-name">Notification (notification.py)</h3>
+                <p class="hook-desc">TTS announcement hook for user input requests. Plays audio notifications when the agent needs user feedback, with personality via optional engineer name inclusion.</p>
+                <div>
+                    <span class="badge magenta">TTS</span>
+                    <span class="badge yellow">Audio</span>
+                    <span class="badge orange">Personality</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Announces: "Your agent needs your input"</li>
+                    <li>30% chance to include ENGINEER_NAME from .env</li>
+                    <li>Uses ElevenLabs → OpenAI → pyttsx3 fallback</li>
+                    <li>Configurable voice settings</li>
+                </ul>
+            </div>
+
+            <div class="hook-card magenta">
+                <h3 class="hook-name">Stop (stop.py)</h3>
+                <p class="hook-desc">Session completion hook with transcript management and TTS summary. Handles graceful session shutdown with optional notifications and chat logging.</p>
+                <div>
+                    <span class="badge magenta">Completion</span>
+                    <span class="badge cyan">Transcript</span>
+                    <span class="badge yellow">TTS</span>
+                    <span class="badge green">LLM</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Logs stop events to logs/stop.json</li>
+                    <li>Copies transcript to chat.json (--chat flag)</li>
+                    <li>TTS completion announcement (--notify flag)</li>
+                    <li>Uses OpenAI → Anthropic → Ollama for completion messages</li>
+                    <li>LLM-generated witty/encouraging completion phrases</li>
+                </ul>
+            </div>
+
+            <div class="hook-card magenta">
+                <h3 class="hook-name">SubagentStop (subagent_stop.py)</h3>
+                <p class="hook-desc">Sub-agent completion notifications. Announces when sub-agents finish their tasks in parallel execution scenarios like /cook or /crypto_research.</p>
+                <div>
+                    <span class="badge magenta">Sub-Agents</span>
+                    <span class="badge yellow">TTS</span>
+                    <span class="badge orange">Parallel</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>TTS notifications for sub-agent completion</li>
+                    <li>Announces agent name and status</li>
+                    <li>Useful for tracking parallel agent execution</li>
+                </ul>
+            </div>
+
+            <div class="hook-card cyan">
+                <h3 class="hook-name">PreCompact (pre_compact.py)</h3>
+                <p class="hook-desc">Pre-summarization processing hook. Executes before Claude compacts conversation history to manage context limits.</p>
+                <div>
+                    <span class="badge cyan">Summarization</span>
+                    <span class="badge purple">Context</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Logs pre-compact events</li>
+                    <li>Allows custom processing before summarization</li>
+                </ul>
+            </div>
+
+            <div class="hook-card cyan">
+                <h3 class="hook-name">SessionStart (session_start.py)</h3>
+                <p class="hook-desc">Session initialization hook. Executes when a new Claude Code session begins, setting up necessary data structures and environment.</p>
+                <div>
+                    <span class="badge cyan">Initialization</span>
+                    <span class="badge green">Setup</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Initializes session state</li>
+                    <li>Sets up logging directories</li>
+                    <li>Prepares session_data.json</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TTS/LLM Utilities -->
+        <div class="section magenta-border">
+            <h2 class="section-title magenta">
+                <span class="icon">&#9632;</span> TTS & LLM UTILITIES (6 files)
+            </h2>
+
+            <div class="info-box magenta">
+                <h4>Fallback Chain Architecture</h4>
+                <p>Utilities use provider fallback chains for resilience. If primary service fails, automatically tries backup providers.</p>
+            </div>
+
+            <h3>TTS Providers (3 files)</h3>
+            <div class="pipeline">
+                <div class="pipeline-stage yellow">
+                    <div class="stage-name">elevenlabs_tts.py</div>
+                    <div class="stage-desc">Primary TTS</div>
+                </div>
+                <div class="pipeline-arrow">&rarr;</div>
+                <div class="pipeline-stage orange">
+                    <div class="stage-name">openai_tts.py</div>
+                    <div class="stage-desc">Backup TTS</div>
+                </div>
+                <div class="pipeline-arrow">&rarr;</div>
+                <div class="pipeline-stage magenta">
+                    <div class="stage-name">pyttsx3_tts.py</div>
+                    <div class="stage-desc">Local Fallback</div>
+                </div>
+            </div>
+
+            <div class="hook-card yellow">
+                <h3 class="hook-name">elevenlabs_tts.py</h3>
+                <p class="hook-desc">Premium ElevenLabs text-to-speech integration. High-quality voice synthesis with natural prosody and emotion.</p>
+                <div>
+                    <span class="badge yellow">Primary</span>
+                    <span class="badge orange">Premium Quality</span>
+                    <span class="badge cyan">API</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Uses ElevenLabs API (requires ELEVENLABS_API_KEY)</li>
+                    <li>Configurable voice ID</li>
+                    <li>Natural-sounding speech</li>
+                    <li>Emotion and prosody control</li>
+                </ul>
+            </div>
+
+            <div class="hook-card orange">
+                <h3 class="hook-name">openai_tts.py</h3>
+                <p class="hook-desc">OpenAI text-to-speech integration. Reliable backup TTS with good quality and broad availability.</p>
+                <div>
+                    <span class="badge orange">Backup</span>
+                    <span class="badge cyan">API</span>
+                    <span class="badge green">Reliable</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Uses OpenAI TTS API (requires OPENAI_API_KEY)</li>
+                    <li>Multiple voice options</li>
+                    <li>Good quality/cost balance</li>
+                </ul>
+            </div>
+
+            <div class="hook-card magenta">
+                <h3 class="hook-name">pyttsx3_tts.py</h3>
+                <p class="hook-desc">Local offline text-to-speech using pyttsx3. Zero-cost fallback that always works without API dependencies.</p>
+                <div>
+                    <span class="badge magenta">Local</span>
+                    <span class="badge green">Offline</span>
+                    <span class="badge cyan">Zero Cost</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>No API keys required</li>
+                    <li>Works offline</li>
+                    <li>Uses system TTS engines</li>
+                    <li>Guaranteed fallback</li>
+                </ul>
+            </div>
+
+            <h3>LLM Providers (3 files)</h3>
+            <div class="pipeline">
+                <div class="pipeline-stage cyan">
+                    <div class="stage-name">oai.py</div>
+                    <div class="stage-desc">OpenAI</div>
+                </div>
+                <div class="pipeline-arrow">&rarr;</div>
+                <div class="pipeline-stage yellow">
+                    <div class="stage-name">anth.py</div>
+                    <div class="stage-desc">Anthropic</div>
+                </div>
+                <div class="pipeline-arrow">&rarr;</div>
+                <div class="pipeline-stage magenta">
+                    <div class="stage-name">ollama.py</div>
+                    <div class="stage-desc">Local Ollama</div>
+                </div>
+            </div>
+
+            <div class="hook-card cyan">
+                <h3 class="hook-name">oai.py</h3>
+                <p class="hook-desc">OpenAI LLM integration for agent naming and completion messages. Fast and reliable for short text generation.</p>
+                <div>
+                    <span class="badge cyan">OpenAI</span>
+                    <span class="badge green">Fast</span>
+                    <span class="badge yellow">GPT-4/3.5</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Used for agent name generation</li>
+                    <li>Generates completion messages</li>
+                    <li>Requires OPENAI_API_KEY</li>
+                </ul>
+            </div>
+
+            <div class="hook-card yellow">
+                <h3 class="hook-name">anth.py</h3>
+                <p class="hook-desc">Anthropic Claude integration. High-quality responses with strong reasoning for creative text generation.</p>
+                <div>
+                    <span class="badge yellow">Anthropic</span>
+                    <span class="badge purple">Claude</span>
+                    <span class="badge green">High Quality</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Backup for OpenAI</li>
+                    <li>Superior creative writing</li>
+                    <li>Requires ANTHROPIC_API_KEY</li>
+                </ul>
+            </div>
+
+            <div class="hook-card magenta">
+                <h3 class="hook-name">ollama.py</h3>
+                <p class="hook-desc">Local Ollama LLM integration. Offline fallback for agent naming and message generation using local models.</p>
+                <div>
+                    <span class="badge magenta">Ollama</span>
+                    <span class="badge green">Local</span>
+                    <span class="badge cyan">Offline</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Final fallback option</li>
+                    <li>Works offline</li>
+                    <li>No API costs</li>
+                    <li>Requires local Ollama installation</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Configuration -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan">
+                <span class="icon">&#9679;</span> CONFIGURATION & DATA FILES
+            </h2>
+
+            <div class="hook-card cyan">
+                <h3 class="hook-name">session_data.json</h3>
+                <p class="hook-desc">Persistent session state managed by UserPromptSubmit hook. Stores agent name, prompt history, and session metadata.</p>
+                <div>
+                    <span class="badge cyan">Session State</span>
+                    <span class="badge green">Persistent</span>
+                </div>
+            </div>
+
+            <div class="hook-card cyan">
+                <h3 class="hook-name">logs/ Directory</h3>
+                <p class="hook-desc">Centralized logging directory for all hook events:</p>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>logs/pre_tool_use.json - Pre-tool execution logs</li>
+                    <li>logs/post_tool_use.json - Post-tool execution logs</li>
+                    <li>logs/user_prompt_submit.json - User prompt history</li>
+                    <li>logs/stop.json - Session stop events</li>
+                    <li>chat.json - Full transcript (--chat flag)</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>Environment Variables</h4>
+                <p>Required for full functionality:</p>
+                <ul class="feature-list">
+                    <li><strong>ELEVENLABS_API_KEY</strong> - ElevenLabs TTS (optional but recommended)</li>
+                    <li><strong>OPENAI_API_KEY</strong> - OpenAI TTS/LLM (backup)</li>
+                    <li><strong>ANTHROPIC_API_KEY</strong> - Anthropic Claude (backup)</li>
+                    <li><strong>ENGINEER_NAME</strong> - Name for personalized notifications (optional)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>CLAUDE CODE BRAIN // HOOK SYSTEM // 8 Lifecycle Handlers + 6 Utilities</p>
+            <p style="margin-top: 10px;"><a href="claude-brain-overview.html" style="color: var(--cyan);">← Back to Overview</a></p>
+        </div>
+    </div>
+
+    <div class="lightbox-overlay" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <div class="lightbox-content" id="lightbox-content"></div>
+        <div class="lightbox-hint">ESC or click outside to close</div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1a1a25',
+                primaryTextColor: '#ffffff',
+                primaryBorderColor: '#00ffff',
+                lineColor: '#ff00ff',
+                secondaryColor: '#12121a',
+                tertiaryColor: '#0a0a0f',
+                textColor: '#ffffff',
+                nodeTextColor: '#ffffff',
+                edgeLabelBackground: '#1a1a25',
+                clusterBkg: '#0a0a0f',
+                clusterBorder: '#00ffff',
+                titleColor: '#00ffff',
+                actorBorder: '#00ffff',
+                actorBkg: '#1a1a25',
+                actorTextColor: '#ffffff',
+                signalColor: '#ffffff',
+                signalTextColor: '#ffffff'
+            },
+            sequence: {
+                actorMargin: 50,
+                boxMargin: 10,
+                boxTextMargin: 5,
+                noteMargin: 10,
+                messageMargin: 35
+            }
+        });
+
+        (function() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxContent = document.getElementById('lightbox-content');
+            const lightboxClose = document.getElementById('lightbox-close');
+
+            document.querySelectorAll('.diagram-container, .mermaid').forEach(container => {
+                container.addEventListener('click', function(e) {
+                    const clone = this.cloneNode(true);
+                    clone.style.cursor = 'default';
+                    clone.style.margin = '0';
+                    lightboxContent.innerHTML = '';
+                    lightboxContent.appendChild(clone);
+                    lightbox.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+            });
+        })();
+    </script>
+</body>
+</html>

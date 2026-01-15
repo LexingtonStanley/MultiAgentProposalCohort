@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaudesBrain - Agentic Brain Map -- Agents Catalog</title>
+
+    <!-- Open Graph / WhatsApp / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ClaudesBrain - Agentic Brain Map -- Agents Catalog">
+    <meta property="og:description" content="All 27 agents documented: 14 core development agents and 13 crypto analysis agents with tools and configurations">
+    <meta property="og:site_name" content="ClaudesBrain">
+    <meta property="og:url" content="https://cohort.packfamily.dog/ClaudesBrain/agents">
+    <meta property="og:image" content="https://cohort.packfamily.dog/ClaudeBrain/brain-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ClaudesBrain - Agentic Brain Map -- Agents Catalog">
+    <meta name="twitter:description" content="All 27 agents documented: 14 core development agents and 13 crypto analysis agents">
+    <meta name="twitter:image" content="https://cohort.packfamily.dog/ClaudeBrain/brain-preview.png">
+
+    <!-- Standard Meta -->
+    <meta name="description" content="All 27 agents documented: 14 core development agents and 13 crypto analysis agents with tools and configurations">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050508;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --bg-elevated: #1a1a25;
+            --cyan: #00ffff;
+            --cyan-dim: #00cccc;
+            --magenta: #ff00ff;
+            --magenta-dim: #cc00cc;
+            --purple: #bf5fff;
+            --green: #00ff88;
+            --yellow: #ffff00;
+            --red: #ff3366;
+            --orange: #ff8800;
+            --blue: #4444ff;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --text-dim: #666666;
+            --border: rgba(255,255,255,0.1);
+            --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.3);
+            --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.3);
+            --glow-purple: 0 0 20px rgba(191, 95, 255, 0.3);
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--cyan) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float1 15s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--magenta) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            animation: float2 18s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--purple) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float3 12s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-50px, 30px) scale(1.1); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.15); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.03),
+                rgba(0, 0, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            border: 1px solid var(--magenta);
+            border-radius: 10px;
+            box-shadow: var(--glow-magenta);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(255, 0, 255, 0.1) 50%,
+                transparent 60%
+            );
+            animation: headerShine 3s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--magenta), var(--cyan), var(--magenta));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 3s linear infinite;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .header .subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--magenta);
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .version {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--cyan);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+        }
+
+        .section.cyan-border { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); }
+        .section.magenta-border { border-color: var(--magenta); box-shadow: 0 0 15px rgba(255, 0, 255, 0.2); }
+        .section.purple-border { border-color: var(--purple); box-shadow: var(--glow-purple); }
+        .section.purple-border::before { background: linear-gradient(90deg, var(--purple), var(--magenta)); }
+        .section.green-border { border-color: var(--green); box-shadow: var(--glow-green); }
+        .section.green-border::before { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title.cyan { color: var(--cyan); }
+        .section-title.magenta { color: var(--magenta); }
+        .section-title.purple { color: var(--purple); }
+        .section-title.green { color: var(--green); }
+        .section-title.yellow { color: var(--yellow); }
+
+        .section-title .icon { font-size: 1.8rem; }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--cyan);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            text-shadow: var(--glow-cyan);
+        }
+
+        h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: var(--magenta); margin-top: 25px; margin-bottom: 15px; }
+        h4 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--purple); margin-top: 20px; margin-bottom: 10px; }
+        p { margin-bottom: 15px; font-size: 1.05rem; color: var(--text-secondary); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: var(--cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--cyan);
+            margin-bottom: 5px;
+        }
+
+        .stat-box.magenta .stat-value { color: var(--magenta); }
+        .stat-box.green .stat-value { color: var(--green); }
+        .stat-box.purple .stat-value { color: var(--purple); }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .agent-card {
+            background: var(--bg-darker);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+        }
+
+        .agent-card.cyan { border-left: 4px solid var(--cyan); }
+        .agent-card.magenta { border-left: 4px solid var(--magenta); }
+        .agent-card.green { border-left: 4px solid var(--green); }
+        .agent-card.purple { border-left: 4px solid var(--purple); }
+        .agent-card.orange { border-left: 4px solid var(--orange); }
+        .agent-card.blue { border-left: 4px solid var(--blue); }
+
+        .agent-card:hover.cyan { border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+        .agent-card:hover.magenta { border-color: var(--magenta); box-shadow: var(--glow-magenta); }
+        .agent-card:hover.green { border-color: var(--green); box-shadow: var(--glow-green); }
+
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .agent-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: var(--cyan);
+        }
+
+        .agent-card.magenta .agent-name { color: var(--magenta); }
+        .agent-card.green .agent-name { color: var(--green); }
+        .agent-card.purple .agent-name { color: var(--purple); }
+        .agent-card.orange .agent-name { color: var(--orange); }
+        .agent-card.blue .agent-name { color: var(--blue); }
+
+        .agent-desc {
+            color: var(--text-secondary);
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .agent-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            margin: 5px;
+        }
+
+        .badge.cyan { background: rgba(0, 255, 255, 0.15); border: 1px solid var(--cyan); color: var(--cyan); }
+        .badge.magenta { background: rgba(255, 0, 255, 0.15); border: 1px solid var(--magenta); color: var(--magenta); }
+        .badge.green { background: rgba(0, 255, 136, 0.15); border: 1px solid var(--green); color: var(--green); }
+        .badge.purple { background: rgba(191, 95, 255, 0.15); border: 1px solid var(--purple); color: var(--purple); }
+        .badge.yellow { background: rgba(255, 255, 0, 0.15); border: 1px solid var(--yellow); color: var(--yellow); }
+        .badge.orange { background: rgba(255, 136, 0, 0.15); border: 1px solid var(--orange); color: var(--orange); }
+        .badge.blue { background: rgba(68, 68, 255, 0.15); border: 1px solid var(--blue); color: var(--blue); }
+
+        .info-box {
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 4px solid var(--cyan);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box.magenta { background: rgba(255, 0, 255, 0.05); border-left-color: var(--magenta); }
+        .info-box h4 { font-family: 'Orbitron', sans-serif; color: var(--cyan); margin-bottom: 10px; margin-top: 0; }
+        .info-box.magenta h4 { color: var(--magenta); }
+        .info-box p { color: var(--text-secondary); margin: 0; }
+
+        .feature-list { list-style: none; padding: 0; }
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+        .feature-list li::before {
+            content: '//';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+        }
+
+        .diagram-container {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 25px 0;
+            overflow-x: auto;
+            cursor: zoom-in;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .diagram-container:hover {
+            border-color: var(--cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .diagram-container::after {
+            content: '[ CLICK TO EXPAND ]';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .diagram-container:hover::after { opacity: 1; color: var(--cyan); }
+
+        .diagram-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--magenta);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .mermaid { background: transparent !important; }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 8, 0.95);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            cursor: zoom-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-overlay.active { display: flex; }
+
+        .lightbox-content {
+            max-width: 95vw;
+            max-height: 95vh;
+            overflow: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.3), 0 0 100px rgba(255, 0, 255, 0.1);
+            cursor: default;
+        }
+
+        .lightbox-content .mermaid,
+        .lightbox-content .diagram-container {
+            transform: scale(1.5);
+            transform-origin: top center;
+            margin-bottom: 30%;
+        }
+
+        .lightbox-close {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--bg-card);
+            border: 2px solid var(--cyan);
+            border-radius: 50%;
+            color: var(--cyan);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10001;
+        }
+
+        .lightbox-close:hover {
+            background: var(--cyan);
+            color: var(--bg-dark);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .lightbox-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            background: var(--bg-card);
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 60px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .section { padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="scanlines"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>AGENT CATALOG</h1>
+            <div class="subtitle">CLAUDE CODE BRAIN // 27 SPECIALIZED AGENTS</div>
+            <div class="version">VERSION 1.0 // AUTO-GENERATED</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan">
+                <span class="icon">&#9670;</span> AGENT STATISTICS
+            </h2>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">27</div>
+                    <div class="stat-label">Total Agents</div>
+                </div>
+                <div class="stat-box magenta">
+                    <div class="stat-value">14</div>
+                    <div class="stat-label">Core Agents</div>
+                </div>
+                <div class="stat-box purple">
+                    <div class="stat-value">13</div>
+                    <div class="stat-label">Crypto Agents</div>
+                </div>
+                <div class="stat-box green">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Model Tiers</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>Model Tiers</h4>
+                <p>Crypto agents use 3 model tiers: <strong>haiku</strong> (fast/cheap), <strong>sonnet</strong> (balanced), <strong>opus</strong> (premium quality)</p>
+            </div>
+        </div>
+
+        <!-- Agent Relationships Diagram -->
+        <div class="section magenta-border">
+            <h2 class="section-title magenta">
+                <span class="icon">&#9830;</span> AGENT RELATIONSHIPS
+            </h2>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// AGENT ECOSYSTEM //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#00ffff', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+flowchart TB
+    subgraph CORE["Core Development Agents"]
+        META["meta-agent<br/>Generate agents"]
+        CODER["coder<br/>Implementation"]
+        ARCH["code-architect<br/>Structure"]
+        REVIEW["code-reviewer<br/>Quality"]
+        SIMP["code-simplifier<br/>Refactor"]
+    end
+
+    subgraph AUTOGEN["AutoGen Specialists"]
+        AG_ARCH["autogen-architect<br/>Multi-agent design"]
+        AG_PROMPT["autogen-prompter<br/>System prompts"]
+    end
+
+    subgraph DOCS["Documentation"]
+        NEON["neon-docs-reporter<br/>HTML styling"]
+        AGENT_ANAL["agent-analyzer<br/>Discover agents"]
+        CTX7["context7-doc-agent<br/>Live docs"]
+    end
+
+    subgraph UI["UI Development"]
+        SHADCN["shadcn-architect<br/>UI components"]
+        FRONTEND["frontend-design<br/>via plugin"]
+    end
+
+    subgraph CRYPTO["Crypto Analysis (3 tiers each)"]
+        COIN["crypto-coin-analyzer<br/>Individual coins"]
+        MARKET["crypto-market-agent<br/>Market overview"]
+        MACRO["macro-crypto-correlation<br/>Fed/inflation"]
+        PLAYS["crypto-investment-plays<br/>Opportunities"]
+        MOVERS["crypto-movers<br/>Gainers/losers"]
+    end
+
+    META -.->|generates| CODER
+    ARCH -->|scaffolds| CODER
+    CODER -->|submits to| REVIEW
+    REVIEW -->|may trigger| SIMP
+
+    AG_ARCH -->|uses| AG_PROMPT
+    AGENT_ANAL -->|feeds| NEON
+
+    style CORE fill:#12121a,stroke:#00ffff,stroke-width:2px
+    style AUTOGEN fill:#12121a,stroke:#ff00ff,stroke-width:2px
+    style DOCS fill:#12121a,stroke:#bf5fff,stroke-width:2px
+    style UI fill:#12121a,stroke:#00ff88,stroke-width:2px
+    style CRYPTO fill:#12121a,stroke:#4444ff,stroke-width:2px
+                </div>
+            </div>
+        </div>
+
+        <!-- Core Agents -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan">
+                <span class="icon">&#9733;</span> CORE DEVELOPMENT AGENTS (14)
+            </h2>
+
+            <div class="agent-card cyan">
+                <div class="agent-header">
+                    <h3 class="agent-name">meta-agent</h3>
+                    <div class="agent-meta">
+                        <span class="badge cyan">opus</span>
+                        <span class="badge cyan">generator</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Generates new agent configurations from natural language descriptions. Has web scraping capabilities for documentation research.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">Web</span>
+                    <span class="badge magenta">Bash</span>
+                    <span class="badge magenta">Read</span>
+                    <span class="badge magenta">Write</span>
+                </div>
+            </div>
+
+            <div class="agent-card green">
+                <div class="agent-header">
+                    <h3 class="agent-name">coder</h3>
+                    <div class="agent-meta">
+                        <span class="badge green">inherit</span>
+                        <span class="badge green">full-stack</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Primary implementation agent with Context7 integration. Expert in TypeScript, Node.js, Next.js, Python, PostgreSQL. Follows SOLID principles and clean code standards. Max 20 lines per function, 3 parameters max.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge cyan">TypeScript</span>
+                    <span class="badge cyan">Python</span>
+                    <span class="badge cyan">PostgreSQL</span>
+                    <span class="badge purple">SOLID</span>
+                </div>
+            </div>
+
+            <div class="agent-card cyan">
+                <div class="agent-header">
+                    <h3 class="agent-name">autogen-architect</h3>
+                    <div class="agent-meta">
+                        <span class="badge cyan">inherit</span>
+                        <span class="badge cyan">multi-agent</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Microsoft AutoGen multi-agent system design specialist. Produces architectural documentation: Agent Roster, Topology diagrams, Configuration Schema, Conversation Patterns, Termination Conditions.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge purple">AutoGen</span>
+                    <span class="badge purple">Architecture</span>
+                </div>
+            </div>
+
+            <div class="agent-card cyan">
+                <div class="agent-header">
+                    <h3 class="agent-name">autogen-prompter</h3>
+                    <div class="agent-meta">
+                        <span class="badge cyan">inherit</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Creates production-quality system prompts for AutoGen agents. Formats prompts with clear roles, tasks, constraints, and examples.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge purple">AutoGen</span>
+                    <span class="badge purple">Prompting</span>
+                </div>
+            </div>
+
+            <div class="agent-card cyan">
+                <div class="agent-header">
+                    <h3 class="agent-name">code-architect</h3>
+                    <div class="agent-meta">
+                        <span class="badge cyan">inherit</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Project structure design, Docker setup, and design pattern selection. Creates folder structures, docker-compose.yml, and architectural decisions.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge purple">Docker</span>
+                    <span class="badge purple">Patterns</span>
+                </div>
+            </div>
+
+            <div class="agent-card cyan">
+                <div class="agent-header">
+                    <h3 class="agent-name">code-reviewer</h3>
+                    <div class="agent-meta">
+                        <span class="badge cyan">inherit</span>
+                        <span class="badge cyan">quality-gate</span>
+                    </div>
+                </div>
+                <p class="agent-desc">OOP/SOLID/design patterns review with severity ratings. Reviews code for Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion principles.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge purple">SOLID</span>
+                    <span class="badge purple">Patterns</span>
+                    <span class="badge yellow">Quality</span>
+                </div>
+            </div>
+
+            <div class="agent-card cyan">
+                <div class="agent-header">
+                    <h3 class="agent-name">code-simplifier</h3>
+                    <div class="agent-meta">
+                        <span class="badge cyan">inherit</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Complexity reduction and DRY enforcement. Refactors code to reduce nesting (max 3 levels), eliminates magic numbers/strings, extracts repeated logic.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge green">Refactoring</span>
+                    <span class="badge green">DRY</span>
+                </div>
+            </div>
+
+            <div class="agent-card orange">
+                <div class="agent-header">
+                    <h3 class="agent-name">agent-analyzer</h3>
+                    <div class="agent-meta">
+                        <span class="badge orange">inherit</span>
+                        <span class="badge orange">discovery</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Discovers and documents LLM agents in codebases. Supports AutoGen, LangChain, CrewAI, and direct SDK usage. Extracts agent roles, tools, prompts, and relationships.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge purple">AutoGen</span>
+                    <span class="badge purple">LangChain</span>
+                    <span class="badge purple">CrewAI</span>
+                </div>
+            </div>
+
+            <div class="agent-card magenta">
+                <div class="agent-header">
+                    <h3 class="agent-name">neon-docs-reporter</h3>
+                    <div class="agent-meta">
+                        <span class="badge magenta">sonnet</span>
+                        <span class="badge magenta">documentation</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Transforms analysis findings into stunning cyberpunk HTML documentation using the Neon Docs aesthetic. Creates this very styling you're viewing now!</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge cyan">HTML/CSS</span>
+                    <span class="badge cyan">Mermaid</span>
+                </div>
+            </div>
+
+            <div class="agent-card cyan">
+                <div class="agent-header">
+                    <h3 class="agent-name">context7-doc-agent</h3>
+                    <div class="agent-meta">
+                        <span class="badge cyan">inherit</span>
+                        <span class="badge cyan">live-docs</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Fetches up-to-date library documentation via Context7 MCP server. Ensures agents always work with current API references for popular frameworks and libraries.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge purple">MCP</span>
+                    <span class="badge purple">Context7</span>
+                </div>
+            </div>
+
+            <div class="agent-card cyan">
+                <div class="agent-header">
+                    <h3 class="agent-name">shadcn-architect</h3>
+                    <div class="agent-meta">
+                        <span class="badge cyan">inherit</span>
+                    </div>
+                </div>
+                <p class="agent-desc">shadcn/ui component integration specialist for React projects. Uses shadcn MCP server for component discovery and installation.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge green">React</span>
+                    <span class="badge green">shadcn/ui</span>
+                    <span class="badge purple">MCP</span>
+                </div>
+            </div>
+
+            <div class="agent-card green">
+                <div class="agent-header">
+                    <h3 class="agent-name">work-completion-summary</h3>
+                    <div class="agent-meta">
+                        <span class="badge green">default</span>
+                        <span class="badge green">tts</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Generates TTS audio summaries of completed work via ElevenLabs API. Provides audible notifications of session results.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge yellow">ElevenLabs</span>
+                    <span class="badge yellow">TTS</span>
+                </div>
+            </div>
+
+            <div class="agent-card cyan">
+                <div class="agent-header">
+                    <h3 class="agent-name">hello-world-agent</h3>
+                    <div class="agent-meta">
+                        <span class="badge cyan">default</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Simple demonstration agent that responds with friendly greetings. Used for testing agent infrastructure.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge green">Demo</span>
+                </div>
+            </div>
+
+            <div class="agent-card purple">
+                <div class="agent-header">
+                    <h3 class="agent-name">llm-ai-agents-and-eng-research</h3>
+                    <div class="agent-meta">
+                        <span class="badge purple">default</span>
+                    </div>
+                </div>
+                <p class="agent-desc">AI/LLM research specialist using Firecrawl for web scraping. Researches latest developments in LLM engineering and agent architectures.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">All Tools</span>
+                    <span class="badge cyan">Web</span>
+                    <span class="badge cyan">Research</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crypto Agents -->
+        <div class="section purple-border">
+            <h2 class="section-title purple">
+                <span class="icon">&#9632;</span> CRYPTOCURRENCY ANALYSIS AGENTS (13)
+            </h2>
+
+            <div class="info-box magenta">
+                <h4>Model Tier Strategy</h4>
+                <p>Each crypto agent family has 3 model variants for different use cases:</p>
+                <ul class="feature-list">
+                    <li><strong>haiku</strong>: Fast, cost-effective analysis for quick insights</li>
+                    <li><strong>sonnet</strong>: Balanced performance and quality for standard analysis</li>
+                    <li><strong>opus</strong>: Premium quality with deep reasoning for critical decisions</li>
+                </ul>
+            </div>
+
+            <h3>crypto-coin-analyzer (3 variants)</h3>
+            <div class="agent-card blue">
+                <div class="agent-header">
+                    <h3 class="agent-name">crypto-coin-analyzer-haiku</h3>
+                    <div class="agent-meta">
+                        <span class="badge blue">haiku</span>
+                        <span class="badge blue">fast</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Fast individual cryptocurrency analysis. Covers price action, news sentiment, technical indicators, and fundamental metrics.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">Web</span>
+                    <span class="badge cyan">Price</span>
+                    <span class="badge cyan">News</span>
+                    <span class="badge cyan">Technicals</span>
+                </div>
+            </div>
+
+            <div class="agent-card blue">
+                <div class="agent-header">
+                    <h3 class="agent-name">crypto-coin-analyzer-sonnet</h3>
+                    <div class="agent-meta">
+                        <span class="badge blue">sonnet</span>
+                        <span class="badge blue">balanced</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Balanced cryptocurrency analysis with deeper reasoning. Same coverage as haiku but with more nuanced insights.</p>
+            </div>
+
+            <div class="agent-card blue">
+                <div class="agent-header">
+                    <h3 class="agent-name">crypto-coin-analyzer-opus</h3>
+                    <div class="agent-meta">
+                        <span class="badge blue">opus</span>
+                        <span class="badge blue">premium</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Premium cryptocurrency analysis with comprehensive reasoning. Best for high-stakes investment decisions.</p>
+            </div>
+
+            <h3>crypto-market-agent (3 variants)</h3>
+            <div class="agent-card blue">
+                <div class="agent-header">
+                    <h3 class="agent-name">crypto-market-agent-{haiku|sonnet|opus}</h3>
+                    <div class="agent-meta">
+                        <span class="badge blue">3 variants</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Top N cryptocurrency market summaries. Analyzes overall market trends, sector performance, and dominant narratives across the crypto landscape.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">Web</span>
+                    <span class="badge cyan">Market Overview</span>
+                    <span class="badge cyan">Trends</span>
+                </div>
+            </div>
+
+            <h3>macro-crypto-correlation-scanner (3 variants)</h3>
+            <div class="agent-card blue">
+                <div class="agent-header">
+                    <h3 class="agent-name">macro-crypto-correlation-scanner-{haiku|sonnet|opus}</h3>
+                    <div class="agent-meta">
+                        <span class="badge blue">3 variants</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Federal Reserve policy, inflation data, and traditional market correlations with cryptocurrency. Analyzes macro factors driving crypto prices.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">Web</span>
+                    <span class="badge cyan">Fed Policy</span>
+                    <span class="badge cyan">Inflation</span>
+                    <span class="badge cyan">Stocks</span>
+                </div>
+            </div>
+
+            <h3>crypto-investment-plays (3 variants)</h3>
+            <div class="agent-card blue">
+                <div class="agent-header">
+                    <h3 class="agent-name">crypto-investment-plays-{haiku|sonnet|opus}</h3>
+                    <div class="agent-meta">
+                        <span class="badge blue">3 variants</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Actionable cryptocurrency investment opportunities with risk/reward analysis, entry/exit strategies, and timeframe recommendations.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">Web</span>
+                    <span class="badge green">Opportunities</span>
+                    <span class="badge green">Risk Analysis</span>
+                </div>
+            </div>
+
+            <h3>crypto-movers (1 variant)</h3>
+            <div class="agent-card blue">
+                <div class="agent-header">
+                    <h3 class="agent-name">crypto-movers-haiku</h3>
+                    <div class="agent-meta">
+                        <span class="badge blue">haiku</span>
+                    </div>
+                </div>
+                <p class="agent-desc">Tracks biggest gainers and losers in cryptocurrency markets. Fast updates on momentum plays and potential reversals.</p>
+                <div class="agent-meta">
+                    <span class="badge magenta">Web</span>
+                    <span class="badge yellow">Gainers</span>
+                    <span class="badge yellow">Losers</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>CLAUDE CODE BRAIN // AGENT CATALOG // 27 Specialized Agents</p>
+            <p style="margin-top: 10px;"><a href="claude-brain-overview.html" style="color: var(--cyan);">← Back to Overview</a></p>
+        </div>
+    </div>
+
+    <div class="lightbox-overlay" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <div class="lightbox-content" id="lightbox-content"></div>
+        <div class="lightbox-hint">ESC or click outside to close</div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1a1a25',
+                primaryTextColor: '#ffffff',
+                primaryBorderColor: '#00ffff',
+                lineColor: '#ff00ff',
+                secondaryColor: '#12121a',
+                tertiaryColor: '#0a0a0f',
+                textColor: '#ffffff',
+                nodeTextColor: '#ffffff',
+                edgeLabelBackground: '#1a1a25',
+                clusterBkg: '#0a0a0f',
+                clusterBorder: '#00ffff',
+                titleColor: '#00ffff'
+            },
+            flowchart: {
+                nodeSpacing: 50,
+                rankSpacing: 50,
+                curve: 'basis',
+                htmlLabels: true
+            }
+        });
+
+        (function() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxContent = document.getElementById('lightbox-content');
+            const lightboxClose = document.getElementById('lightbox-close');
+
+            document.querySelectorAll('.diagram-container, .mermaid').forEach(container => {
+                container.addEventListener('click', function(e) {
+                    const clone = this.cloneNode(true);
+                    clone.style.cursor = 'default';
+                    clone.style.margin = '0';
+                    lightboxContent.innerHTML = '';
+                    lightboxContent.appendChild(clone);
+                    lightbox.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+            });
+        })();
+    </script>
+</body>
+</html>

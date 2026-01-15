@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaudesBrain - Agentic Brain Map -- Skills Documentation</title>
+
+    <!-- Open Graph / WhatsApp / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ClaudesBrain - Agentic Brain Map -- Skills Documentation">
+    <meta property="og:description" content="10 skill modules including design patterns, Docker templates, GenAI patterns, and documentation styles">
+    <meta property="og:site_name" content="ClaudesBrain">
+    <meta property="og:url" content="https://cohort.packfamily.dog/ClaudesBrain/skills">
+    <meta property="og:image" content="https://cohort.packfamily.dog/ClaudeBrain/brain-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ClaudesBrain - Agentic Brain Map -- Skills Documentation">
+    <meta name="twitter:description" content="10 skill modules including design patterns, Docker templates, GenAI patterns">
+    <meta name="twitter:image" content="https://cohort.packfamily.dog/ClaudeBrain/brain-preview.png">
+
+    <!-- Standard Meta -->
+    <meta name="description" content="10 skill modules including design patterns, Docker templates, GenAI patterns, and documentation styles">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050508;
+            --bg-card: #12121a;
+            --bg-elevated: #1a1a25;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --purple: #bf5fff;
+            --green: #00ff88;
+            --yellow: #ffff00;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-dim: #666666;
+            --border: rgba(255,255,255,0.1);
+            --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.3);
+            --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.3);
+            --glow-purple: 0 0 20px rgba(191, 95, 255, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--purple) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float1 15s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--magenta) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            animation: float2 18s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--cyan) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float3 12s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-50px, 30px) scale(1.1); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.15); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.03),
+                rgba(0, 0, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(191, 95, 255, 0.1), rgba(255, 0, 255, 0.1));
+            border: 1px solid var(--purple);
+            border-radius: 10px;
+            box-shadow: var(--glow-purple);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(191, 95, 255, 0.1) 50%,
+                transparent 60%
+            );
+            animation: headerShine 3s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--purple), var(--magenta), var(--purple));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 3s linear infinite;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .header .subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--purple);
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .version {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--magenta);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--purple), var(--magenta));
+        }
+
+        .section.cyan-border { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); }
+        .section.cyan-border::before { background: linear-gradient(90deg, var(--cyan), var(--magenta)); }
+        .section.purple-border { border-color: var(--purple); box-shadow: var(--glow-purple); }
+        .section.magenta-border { border-color: var(--magenta); box-shadow: var(--glow-magenta); }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title.cyan { color: var(--cyan); }
+        .section-title.purple { color: var(--purple); }
+        .section-title.magenta { color: var(--magenta); }
+        .section-title .icon { font-size: 1.8rem; }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--purple);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            text-shadow: var(--glow-purple);
+        }
+
+        h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: var(--magenta); margin-top: 25px; margin-bottom: 15px; }
+        p { margin-bottom: 15px; font-size: 1.05rem; color: var(--text-secondary); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: var(--purple);
+            box-shadow: var(--glow-purple);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--purple);
+            margin-bottom: 5px;
+        }
+
+        .stat-box.cyan .stat-value { color: var(--cyan); }
+        .stat-box.magenta .stat-value { color: var(--magenta); }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .skill-card {
+            background: var(--bg-darker);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+        }
+
+        .skill-card.purple { border-left: 4px solid var(--purple); }
+        .skill-card.cyan { border-left: 4px solid var(--cyan); }
+        .skill-card.magenta { border-left: 4px solid var(--magenta); }
+
+        .skill-card:hover.purple { border-color: var(--purple); box-shadow: var(--glow-purple); }
+        .skill-card:hover.cyan { border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+        .skill-card:hover.magenta { border-color: var(--magenta); box-shadow: var(--glow-magenta); }
+
+        .skill-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: var(--purple);
+            margin-bottom: 10px;
+        }
+
+        .skill-card.cyan .skill-name { color: var(--cyan); }
+        .skill-card.magenta .skill-name { color: var(--magenta); }
+
+        .skill-desc {
+            color: var(--text-secondary);
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            margin: 5px 5px 5px 0;
+        }
+
+        .badge.cyan { background: rgba(0, 255, 255, 0.15); border: 1px solid var(--cyan); color: var(--cyan); }
+        .badge.magenta { background: rgba(255, 0, 255, 0.15); border: 1px solid var(--magenta); color: var(--magenta); }
+        .badge.purple { background: rgba(191, 95, 255, 0.15); border: 1px solid var(--purple); color: var(--purple); }
+        .badge.green { background: rgba(0, 255, 136, 0.15); border: 1px solid var(--green); color: var(--green); }
+        .badge.yellow { background: rgba(255, 255, 0, 0.15); border: 1px solid var(--yellow); color: var(--yellow); }
+
+        .feature-list { list-style: none; padding: 0; }
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+        .feature-list li::before {
+            content: '//';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+        }
+
+        .info-box {
+            background: rgba(191, 95, 255, 0.05);
+            border-left: 4px solid var(--purple);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box.cyan { background: rgba(0, 255, 255, 0.05); border-left-color: var(--cyan); }
+        .info-box.magenta { background: rgba(255, 0, 255, 0.05); border-left-color: var(--magenta); }
+        .info-box h4 { font-family: 'Orbitron', sans-serif; color: var(--purple); margin-bottom: 10px; margin-top: 0; }
+        .info-box.cyan h4 { color: var(--cyan); }
+        .info-box.magenta h4 { color: var(--magenta); }
+        .info-box p { color: var(--text-secondary); margin: 0; }
+
+        .footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 60px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .section { padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="scanlines"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>SKILLS DOCUMENTATION</h1>
+            <div class="subtitle">CLAUDE CODE BRAIN // 10 REFERENCE MODULES</div>
+            <div class="version">VERSION 1.0 // AUTO-GENERATED</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="section purple-border">
+            <h2 class="section-title purple">
+                <span class="icon">&#9632;</span> SKILLS STATISTICS
+            </h2>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">10</div>
+                    <div class="stat-label">Total Skills</div>
+                </div>
+                <div class="stat-box cyan">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Dev Skills</div>
+                </div>
+                <div class="stat-box magenta">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">AI/GenAI Skills</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>On-Demand Loading</h4>
+                <p>Skills are loaded when needed, providing reference materials, templates, and best practices directly into agent context. Each skill is a specialized knowledge module.</p>
+            </div>
+        </div>
+
+        <!-- Development System Skills -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan">
+                <span class="icon">&#9670;</span> DEVELOPMENT SYSTEM SKILLS
+            </h2>
+
+            <div class="skill-card purple">
+                <h3 class="skill-name">/agentic-dev-system</h3>
+                <p class="skill-desc">Lightweight system design document for orchestrated multi-agent software development. Defines architecture principles, agent roles (autogen-architect, code-architect, coder, code-reviewer, code-simplifier), Docker-first development, and OOP/design pattern standards.</p>
+                <div>
+                    <span class="badge purple">Architecture</span>
+                    <span class="badge cyan">SOLID Principles</span>
+                    <span class="badge cyan">Docker-First</span>
+                    <span class="badge magenta">Agent Roles</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Core philosophy: Agents as specialist tools</li>
+                    <li>SOLID quick reference (S-O-L-I-D)</li>
+                    <li>Clean code rules: 20 lines max per function, 3 params max</li>
+                    <li>Classes: PascalCase nouns | Methods: camelCase verbs</li>
+                    <li>One class per file, max 300 lines</li>
+                    <li>No magic numbers/strings, max 3 nesting levels</li>
+                </ul>
+            </div>
+
+            <div class="skill-card purple">
+                <h3 class="skill-name">/agentic-dev-system-full</h3>
+                <p class="skill-desc">Complete system design document for orchestrated multi-agent software development. Includes detailed agent specifications, workflow examples, Docker patterns, and comprehensive integration guides. Extended version of agentic-dev-system.</p>
+                <div>
+                    <span class="badge purple">Complete Reference</span>
+                    <span class="badge cyan">Workflow Examples</span>
+                    <span class="badge magenta">Integration Guides</span>
+                </div>
+            </div>
+
+            <div class="skill-card cyan">
+                <h3 class="skill-name">/design-patterns</h3>
+                <p class="skill-desc">Design patterns reference with TypeScript and Python examples. Covers Factory, Builder, Repository, Strategy, and Observer patterns with implementation details. Use when implementing patterns during coding tasks.</p>
+                <div>
+                    <span class="badge cyan">Factory Pattern</span>
+                    <span class="badge cyan">Builder Pattern</span>
+                    <span class="badge cyan">Repository Pattern</span>
+                    <span class="badge cyan">Strategy Pattern</span>
+                    <span class="badge cyan">Observer Pattern</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>TypeScript & Python implementations</li>
+                    <li>When to use each pattern</li>
+                    <li>Code examples and structure</li>
+                    <li>SOLID principle alignment</li>
+                </ul>
+            </div>
+
+            <div class="skill-card cyan">
+                <h3 class="skill-name">/docker-templates</h3>
+                <p class="skill-desc">Docker configuration templates including docker-compose.yml, Dockerfiles for Node.js/Python/Rust, and common services (PostgreSQL, Redis, RabbitMQ). Use when setting up containerized projects.</p>
+                <div>
+                    <span class="badge cyan">docker-compose.yml</span>
+                    <span class="badge cyan">Dockerfiles</span>
+                    <span class="badge purple">PostgreSQL</span>
+                    <span class="badge purple">Redis</span>
+                    <span class="badge purple">RabbitMQ</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Multi-service docker-compose examples</li>
+                    <li>Node.js, Python, Rust Dockerfiles</li>
+                    <li>Volume management patterns</li>
+                    <li>Network configuration</li>
+                    <li>Environment variable handling</li>
+                </ul>
+            </div>
+
+            <div class="skill-card cyan">
+                <h3 class="skill-name">/project-structure</h3>
+                <p class="skill-desc">Project structure templates for monorepos, microservices, Python/Node.js backends, and React/Next.js frontends. Use when scaffolding new projects or organizing codebases.</p>
+                <div>
+                    <span class="badge cyan">Monorepo</span>
+                    <span class="badge cyan">Microservices</span>
+                    <span class="badge green">Node.js Backend</span>
+                    <span class="badge green">Python Backend</span>
+                    <span class="badge green">React/Next.js</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Folder structure conventions</li>
+                    <li>Module organization patterns</li>
+                    <li>Configuration file placement</li>
+                    <li>Test directory structure</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- GenAI/LLM Skills -->
+        <div class="section magenta-border">
+            <h2 class="section-title magenta">
+                <span class="icon">&#9830;</span> GENAI & LLM APPLICATION SKILLS
+            </h2>
+
+            <div class="skill-card magenta">
+                <h3 class="skill-name">/genai-patterns</h3>
+                <p class="skill-desc">GenAI/LLM application patterns including provider abstraction, agent hierarchies, prompt management, resilience patterns, and observability. Use when building AI/LLM applications.</p>
+                <div>
+                    <span class="badge magenta">Provider Abstraction</span>
+                    <span class="badge magenta">Agent Hierarchies</span>
+                    <span class="badge purple">Prompt Management</span>
+                    <span class="badge cyan">Resilience</span>
+                    <span class="badge cyan">Observability</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Model-agnostic provider interface</li>
+                    <li>Orchestrator → Specialist → Worker hierarchy</li>
+                    <li>Centralized prompt versioning</li>
+                    <li>Retry with exponential backoff</li>
+                    <li>Circuit breaker patterns</li>
+                    <li>Structured logging & tracing</li>
+                </ul>
+            </div>
+
+            <div class="skill-card magenta">
+                <h3 class="skill-name">/genai-framework</h3>
+                <p class="skill-desc">Python + FastAPI multi-agent GenAI framework scaffold. Provides model-agnostic provider abstraction, agent hierarchy, centralized prompt management, resilience patterns, and observability. Use when starting new GenAI applications.</p>
+                <div>
+                    <span class="badge magenta">Python</span>
+                    <span class="badge magenta">FastAPI</span>
+                    <span class="badge purple">Multi-Agent</span>
+                    <span class="badge cyan">Production Ready</span>
+                </div>
+                <p style="margin-top: 15px; color: var(--text-dim); font-size: 0.95rem;"><strong>Framework Structure:</strong></p>
+                <ul class="feature-list">
+                    <li><strong>providers/</strong> - OpenAI, Anthropic, Ollama implementations</li>
+                    <li><strong>agents/</strong> - Base agent, orchestrator, specialist, worker</li>
+                    <li><strong>prompts/</strong> - Centralized prompt management</li>
+                    <li><strong>resilience/</strong> - Retry, circuit breaker, rate limiting</li>
+                    <li><strong>observability/</strong> - Logging, metrics, tracing</li>
+                    <li><strong>api/</strong> - FastAPI routes and schemas</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Documentation Skills -->
+        <div class="section purple-border">
+            <h2 class="section-title purple">
+                <span class="icon">&#9733;</span> DOCUMENTATION SKILLS
+            </h2>
+
+            <div class="skill-card purple">
+                <h3 class="skill-name">/neon-docs</h3>
+                <p class="skill-desc">Create polished HTML documentation with dark neon cyberpunk styling. Features animated grid backgrounds with gradient orbs, scanline overlays, cyan/magenta/purple/green accent colors, lightbox diagrams, Mermaid dark theme, and professional presentation-ready formatting. This very page uses neon-docs styling!</p>
+                <div>
+                    <span class="badge purple">HTML/CSS</span>
+                    <span class="badge cyan">Cyberpunk Theme</span>
+                    <span class="badge magenta">Mermaid Diagrams</span>
+                    <span class="badge green">Lightbox</span>
+                    <span class="badge yellow">Responsive</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Animated grid background with 3 gradient orbs</li>
+                    <li>Scanline overlay effect</li>
+                    <li>Stats grids, info boxes, pipeline flows</li>
+                    <li>Mermaid diagram lightbox expansion</li>
+                    <li>Mobile responsive (480px, 768px, 1024px breakpoints)</li>
+                    <li>Color-coded sections: cyan/magenta/purple/green</li>
+                </ul>
+            </div>
+
+            <div class="skill-card purple">
+                <h3 class="skill-name">/no-black-box-templates</h3>
+                <p class="skill-desc">Documentation templates for the /no_black_box command. Provides consistent formats for different project types. Supports both Markdown and HTML (Neon Docs styling) output.</p>
+                <div>
+                    <span class="badge purple">Templates</span>
+                    <span class="badge cyan">Markdown</span>
+                    <span class="badge magenta">HTML</span>
+                    <span class="badge green">Project Analysis</span>
+                </div>
+                <ul class="feature-list" style="margin-top: 15px;">
+                    <li>Architecture documentation format</li>
+                    <li>Component catalog templates</li>
+                    <li>Data flow documentation</li>
+                    <li>Agent catalog (for AI projects)</li>
+                    <li>System overview templates</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Usage Guidelines -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan">
+                <span class="icon">&#9679;</span> SKILL USAGE GUIDELINES
+            </h2>
+
+            <div class="info-box cyan">
+                <h4>When to Load Skills</h4>
+                <p>Skills should be loaded proactively when starting implementation in their respective domains. The user's PRINCIPLES.md specifies on-demand loading triggers:</p>
+            </div>
+
+            <div class="skill-card cyan">
+                <h3 style="color: var(--cyan);">Loading Triggers</h3>
+                <table style="width: 100%; margin-top: 15px; color: var(--text-secondary);">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <th style="text-align: left; padding: 10px; color: var(--cyan);">Skill</th>
+                            <th style="text-align: left; padding: 10px; color: var(--cyan);">Load When User Mentions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;"><strong>/genai-patterns</strong></td>
+                            <td style="padding: 10px;">LLM apps, agents, AI systems, multi-agent, provider abstraction, prompts</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;"><strong>/design-patterns</strong></td>
+                            <td style="padding: 10px;">Factory, Builder, Strategy, Repository, Observer, or any design pattern</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;"><strong>/docker-templates</strong></td>
+                            <td style="padding: 10px;">Docker, containers, docker-compose, Dockerfile, containerization</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;"><strong>/project-structure</strong></td>
+                            <td style="padding: 10px;">New project, scaffolding, folder structure, monorepo, microservices</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;"><strong>/agentic-dev-system</strong></td>
+                            <td style="padding: 10px;">Full workflow details, agent specs, integration guides</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box magenta">
+                <h4>Behavior Pattern</h4>
+                <p>When starting implementation in these domains, agents should either:</p>
+                <ul class="feature-list">
+                    <li>Ask user: "Should I load /skill-name for reference patterns?"</li>
+                    <li>Proactively load if the need is clearly evident</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>CLAUDE CODE BRAIN // SKILLS DOCUMENTATION // 10 Reference Modules</p>
+            <p style="margin-top: 10px;"><a href="claude-brain-overview.html" style="color: var(--cyan);">← Back to Overview</a></p>
+        </div>
+    </div>
+
+    <script>
+        if (typeof mermaid !== 'undefined') {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'dark'
+            });
+        }
+    </script>
+</body>
+</html>

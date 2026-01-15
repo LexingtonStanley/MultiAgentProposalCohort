@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaudesBrain - Agentic Brain Map -- Workflows</title>
+
+    <!-- Open Graph / WhatsApp / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ClaudesBrain - Agentic Brain Map -- Workflows">
+    <meta property="og:description" content="Key orchestration patterns: Ralph autonomous loop, crypto research pipeline, multi-agent coordination">
+    <meta property="og:site_name" content="ClaudesBrain">
+    <meta property="og:url" content="https://cohort.packfamily.dog/ClaudesBrain/workflows">
+    <meta property="og:image" content="https://cohort.packfamily.dog/ClaudeBrain/brain-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ClaudesBrain - Agentic Brain Map -- Workflows">
+    <meta name="twitter:description" content="Key orchestration patterns: Ralph autonomous loop, crypto research pipeline, multi-agent coordination">
+    <meta name="twitter:image" content="https://cohort.packfamily.dog/ClaudeBrain/brain-preview.png">
+
+    <!-- Standard Meta -->
+    <meta name="description" content="Key orchestration patterns: Ralph autonomous loop, crypto research pipeline, multi-agent coordination">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050508;
+            --bg-card: #12121a;
+            --bg-elevated: #1a1a25;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --purple: #bf5fff;
+            --green: #00ff88;
+            --yellow: #ffff00;
+            --orange: #ff8800;
+            --blue: #4444ff;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-dim: #666666;
+            --border: rgba(255,255,255,0.1);
+            --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.3);
+            --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.3);
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--magenta) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float1 15s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--cyan) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            animation: float2 18s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--green) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float3 12s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-50px, 30px) scale(1.1); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.15); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.03),
+                rgba(0, 0, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 255, 255, 0.1));
+            border: 1px solid var(--magenta);
+            border-radius: 10px;
+            box-shadow: var(--glow-magenta);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(255, 0, 255, 0.1) 50%,
+                transparent 60%
+            );
+            animation: headerShine 3s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--magenta), var(--cyan), var(--green), var(--magenta));
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 4s linear infinite;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 300% center; }
+        }
+
+        .header .subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--magenta);
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .version {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--cyan);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+        }
+
+        .section.cyan-border { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); }
+        .section.magenta-border { border-color: var(--magenta); box-shadow: var(--glow-magenta); }
+        .section.green-border { border-color: var(--green); box-shadow: var(--glow-green); }
+        .section.green-border::before { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title.cyan { color: var(--cyan); }
+        .section-title.magenta { color: var(--magenta); }
+        .section-title.green { color: var(--green); }
+        .section-title .icon { font-size: 1.8rem; }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--magenta);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            text-shadow: var(--glow-magenta);
+        }
+
+        h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: var(--cyan); margin-top: 25px; margin-bottom: 15px; }
+        p { margin-bottom: 15px; font-size: 1.05rem; color: var(--text-secondary); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: var(--magenta);
+            box-shadow: var(--glow-magenta);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--magenta);
+            margin-bottom: 5px;
+        }
+
+        .stat-box.cyan .stat-value { color: var(--cyan); }
+        .stat-box.green .stat-value { color: var(--green); }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            margin: 5px 5px 5px 0;
+        }
+
+        .badge.cyan { background: rgba(0, 255, 255, 0.15); border: 1px solid var(--cyan); color: var(--cyan); }
+        .badge.magenta { background: rgba(255, 0, 255, 0.15); border: 1px solid var(--magenta); color: var(--magenta); }
+        .badge.green { background: rgba(0, 255, 136, 0.15); border: 1px solid var(--green); color: var(--green); }
+        .badge.purple { background: rgba(191, 95, 255, 0.15); border: 1px solid var(--purple); color: var(--purple); }
+        .badge.blue { background: rgba(68, 68, 255, 0.15); border: 1px solid var(--blue); color: var(--blue); }
+        .badge.yellow { background: rgba(255, 255, 0, 0.15); border: 1px solid var(--yellow); color: var(--yellow); }
+
+        .feature-list { list-style: none; padding: 0; }
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+        .feature-list li::before {
+            content: '//';
+            position: absolute;
+            left: 0;
+            color: var(--magenta);
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+        }
+
+        .pipeline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pipeline-stage {
+            background: var(--bg-darker);
+            border: 2px solid var(--cyan);
+            border-radius: 8px;
+            padding: 15px 25px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .pipeline-stage.magenta { border-color: var(--magenta); }
+        .pipeline-stage.green { border-color: var(--green); }
+        .pipeline-stage.yellow { border-color: var(--yellow); }
+
+        .pipeline-stage .stage-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--cyan);
+            margin-bottom: 5px;
+        }
+
+        .pipeline-stage.magenta .stage-name { color: var(--magenta); }
+        .pipeline-stage.green .stage-name { color: var(--green); }
+        .pipeline-stage.yellow .stage-name { color: var(--yellow); }
+
+        .pipeline-stage .stage-desc { font-size: 0.85rem; color: var(--text-dim); }
+        .pipeline-arrow { font-size: 1.5rem; color: var(--magenta); }
+
+        .info-box {
+            background: rgba(255, 0, 255, 0.05);
+            border-left: 4px solid var(--magenta);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box.cyan { background: rgba(0, 255, 255, 0.05); border-left-color: var(--cyan); }
+        .info-box.green { background: rgba(0, 255, 136, 0.05); border-left-color: var(--green); }
+        .info-box h4 { font-family: 'Orbitron', sans-serif; color: var(--magenta); margin-bottom: 10px; margin-top: 0; }
+        .info-box.cyan h4 { color: var(--cyan); }
+        .info-box.green h4 { color: var(--green); }
+        .info-box p { color: var(--text-secondary); margin: 0; }
+
+        .diagram-container {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 25px 0;
+            overflow-x: auto;
+            cursor: zoom-in;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .diagram-container:hover {
+            border-color: var(--cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .diagram-container::after {
+            content: '[ CLICK TO EXPAND ]';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .diagram-container:hover::after { opacity: 1; color: var(--cyan); }
+
+        .diagram-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--magenta);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .mermaid { background: transparent !important; }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 8, 0.95);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            cursor: zoom-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-overlay.active { display: flex; }
+
+        .lightbox-content {
+            max-width: 95vw;
+            max-height: 95vh;
+            overflow: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.3), 0 0 100px rgba(255, 0, 255, 0.1);
+            cursor: default;
+        }
+
+        .lightbox-content .mermaid,
+        .lightbox-content .diagram-container {
+            transform: scale(1.5);
+            transform-origin: top center;
+            margin-bottom: 30%;
+        }
+
+        .lightbox-close {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--bg-card);
+            border: 2px solid var(--cyan);
+            border-radius: 50%;
+            color: var(--cyan);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10001;
+        }
+
+        .lightbox-close:hover {
+            background: var(--cyan);
+            color: var(--bg-dark);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .lightbox-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            background: var(--bg-card);
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 60px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .section { padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .pipeline { flex-direction: column; }
+            .pipeline-arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="scanlines"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>ORCHESTRATION WORKFLOWS</h1>
+            <div class="subtitle">CLAUDE CODE BRAIN // AGENT COORDINATION PATTERNS</div>
+            <div class="version">VERSION 1.0 // AUTO-GENERATED</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="section magenta-border">
+            <h2 class="section-title magenta">
+                <span class="icon">&#9830;</span> WORKFLOW OVERVIEW
+            </h2>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Major Workflows</div>
+                </div>
+                <div class="stat-box cyan">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Max Parallel Agents</div>
+                </div>
+                <div class="stat-box green">
+                    <div class="stat-value">Sequential + Parallel</div>
+                    <div class="stat-label">Execution Modes</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>Orchestration Philosophy</h4>
+                <p>Claude Code Brain uses two primary orchestration patterns: <strong>Sequential</strong> for dependent tasks with quality gates (Ralph), and <strong>Parallel</strong> for independent analysis tasks (Crypto Research, Cook).</p>
+            </div>
+        </div>
+
+        <!-- Ralph Workflow -->
+        <div class="section green-border">
+            <h2 class="section-title green">
+                <span class="icon">&#9733;</span> RALPH AUTONOMOUS LOOP
+            </h2>
+
+            <div class="info-box green">
+                <h4>Sequential Quality-Gated Development</h4>
+                <p>Ralph implements a strict sequential workflow where each agent's output becomes the next agent's input. Progress only occurs after passing quality gates.</p>
+            </div>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// RALPH WORKFLOW SEQUENCE //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#00ffff', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+flowchart TB
+    START([User runs /ralph N])
+    PRD[Load prd.json]
+    LOOP{More stories?}
+    FIRST{First story?}
+    ARCH[code-architect<br/>Project scaffolding]
+    CODER[coder<br/>Implement story]
+    REVIEW[code-reviewer<br/>Quality gate]
+    PASS{Review passes?}
+    COMMIT[Git commit]
+    UPDATE[Update prd.json]
+    MAX{Max iterations?}
+    END([Complete])
+
+    START --> PRD
+    PRD --> LOOP
+    LOOP -->|Yes| FIRST
+    FIRST -->|Yes| ARCH
+    FIRST -->|No| CODER
+    ARCH --> CODER
+    CODER --> REVIEW
+    REVIEW --> PASS
+    PASS -->|Yes| COMMIT
+    PASS -->|No| MAX
+    COMMIT --> UPDATE
+    UPDATE --> MAX
+    MAX -->|No| LOOP
+    MAX -->|Yes| END
+    LOOP -->|No| END
+
+    style START fill:#00ff88,stroke:#00ff88,color:#0a0a0f
+    style END fill:#00ff88,stroke:#00ff88,color:#0a0a0f
+    style ARCH fill:#1a1a25,stroke:#00ffff
+    style CODER fill:#1a1a25,stroke:#00ff88
+    style REVIEW fill:#1a1a25,stroke:#ff00ff
+    style COMMIT fill:#1a1a25,stroke:#00ffff
+                </div>
+            </div>
+
+            <h3>Workflow Steps</h3>
+            <div class="pipeline">
+                <div class="pipeline-stage cyan">
+                    <div class="stage-name">/prd</div>
+                    <div class="stage-desc">Generate PRD.md</div>
+                </div>
+                <div class="pipeline-arrow">&rarr;</div>
+                <div class="pipeline-stage cyan">
+                    <div class="stage-name">/userstories</div>
+                    <div class="stage-desc">Convert to prd.json</div>
+                </div>
+                <div class="pipeline-arrow">&rarr;</div>
+                <div class="pipeline-stage green">
+                    <div class="stage-name">/ralph N</div>
+                    <div class="stage-desc">Autonomous execution</div>
+                </div>
+            </div>
+
+            <div class="info-box cyan">
+                <h4>Agent Sequence</h4>
+                <p><strong>Per Story Iteration:</strong></p>
+                <ul class="feature-list">
+                    <li><strong>code-architect</strong> (first story only): Docker setup, folder structure, pattern selection</li>
+                    <li><strong>coder</strong>: Implements the user story with SOLID principles</li>
+                    <li><strong>code-reviewer</strong>: Reviews for OOP/SOLID violations, assigns severity</li>
+                    <li><strong>If passes:</strong> Git commit, update prd.json, next story</li>
+                    <li><strong>If fails:</strong> Check max iterations, retry or terminate</li>
+                </ul>
+            </div>
+
+            <div class="info-box green">
+                <h4>Quality Gates</h4>
+                <p>Code-reviewer provides severity ratings:</p>
+                <ul class="feature-list">
+                    <li><strong>PASS:</strong> No violations or minor style issues → Commit</li>
+                    <li><strong>MINOR:</strong> Optional improvements → Commit</li>
+                    <li><strong>MAJOR:</strong> SOLID violations → Retry with coder</li>
+                    <li><strong>CRITICAL:</strong> Architecture issues → Requires manual intervention</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>Termination Conditions</h4>
+                <ul class="feature-list">
+                    <li>All user stories pass code review</li>
+                    <li>Maximum iterations N reached</li>
+                    <li>Critical issues requiring manual intervention</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Crypto Research Workflow -->
+        <div class="section cyan-border">
+            <h2 class="section-title cyan">
+                <span class="icon">&#9670;</span> CRYPTO RESEARCH PARALLEL EXECUTION
+            </h2>
+
+            <div class="info-box cyan">
+                <h4>Parallel Multi-Tier Analysis</h4>
+                <p>Crypto research executes 12 agents simultaneously across 3 model tiers, providing comprehensive multi-perspective analysis.</p>
+            </div>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// CRYPTO RESEARCH PARALLEL FLOW //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#00ffff', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+flowchart TB
+    START([User runs /crypto_research BTC])
+
+    subgraph MARKET["Market Analysis (3 agents)"]
+        M_H[crypto-market-agent<br/>haiku]
+        M_S[crypto-market-agent<br/>sonnet]
+        M_O[crypto-market-agent<br/>opus]
+    end
+
+    subgraph COIN["Coin Analysis (3 agents)"]
+        C_H[crypto-coin-analyzer<br/>haiku]
+        C_S[crypto-coin-analyzer<br/>sonnet]
+        C_O[crypto-coin-analyzer<br/>opus]
+    end
+
+    subgraph MACRO["Macro Correlations (3 agents)"]
+        MAC_H[macro-crypto-correlation<br/>haiku]
+        MAC_S[macro-crypto-correlation<br/>sonnet]
+        MAC_O[macro-crypto-correlation<br/>opus]
+    end
+
+    subgraph PLAYS["Investment Plays (3 agents)"]
+        P_H[crypto-investment-plays<br/>haiku]
+        P_S[crypto-investment-plays<br/>sonnet]
+        P_O[crypto-investment-plays<br/>opus]
+    end
+
+    GATHER[Gather Results]
+    SAVE[Save to outputs/timestamp/]
+    END([Complete])
+
+    START -.->|parallel| MARKET
+    START -.->|parallel| COIN
+    START -.->|parallel| MACRO
+    START -.->|parallel| PLAYS
+
+    MARKET --> GATHER
+    COIN --> GATHER
+    MACRO --> GATHER
+    PLAYS --> GATHER
+
+    GATHER --> SAVE
+    SAVE --> END
+
+    style START fill:#00ffff,stroke:#00ffff,color:#0a0a0f
+    style END fill:#00ffff,stroke:#00ffff,color:#0a0a0f
+    style MARKET fill:#0a0a0f,stroke:#4444ff
+    style COIN fill:#0a0a0f,stroke:#4444ff
+    style MACRO fill:#0a0a0f,stroke:#4444ff
+    style PLAYS fill:#0a0a0f,stroke:#4444ff
+                </div>
+            </div>
+
+            <h3>Agent Families (4 types × 3 tiers = 12 agents)</h3>
+
+            <div class="info-box">
+                <h4>crypto-market-agent (3 variants)</h4>
+                <p><strong>Purpose:</strong> Top N cryptocurrency market overview, sector trends, dominant narratives</p>
+                <p><strong>Output:</strong> outputs/&lt;timestamp&gt;/crypto_market/</p>
+            </div>
+
+            <div class="info-box">
+                <h4>crypto-coin-analyzer (3 variants)</h4>
+                <p><strong>Purpose:</strong> Individual coin deep dive - price, news, sentiment, technical indicators</p>
+                <p><strong>Output:</strong> outputs/&lt;timestamp&gt;/crypto_analysis/</p>
+            </div>
+
+            <div class="info-box">
+                <h4>macro-crypto-correlation-scanner (3 variants)</h4>
+                <p><strong>Purpose:</strong> Fed policy, inflation, traditional market correlations with crypto</p>
+                <p><strong>Output:</strong> outputs/&lt;timestamp&gt;/crypto_macro/</p>
+            </div>
+
+            <div class="info-box">
+                <h4>crypto-investment-plays (3 variants)</h4>
+                <p><strong>Purpose:</strong> Actionable opportunities with risk/reward, entry/exit strategies</p>
+                <p><strong>Output:</strong> outputs/&lt;timestamp&gt;/crypto_plays/</p>
+            </div>
+
+            <h3>Model Tier Strategy</h3>
+            <div class="pipeline">
+                <div class="pipeline-stage green">
+                    <div class="stage-name">HAIKU</div>
+                    <div class="stage-desc">Fast, cost-effective</div>
+                </div>
+                <div class="pipeline-stage yellow">
+                    <div class="stage-name">SONNET</div>
+                    <div class="stage-desc">Balanced quality</div>
+                </div>
+                <div class="pipeline-stage magenta">
+                    <div class="stage-name">OPUS</div>
+                    <div class="stage-desc">Premium reasoning</div>
+                </div>
+            </div>
+
+            <div class="info-box green">
+                <h4>Parallel Execution Benefits</h4>
+                <ul class="feature-list">
+                    <li>Multiple perspectives on same data</li>
+                    <li>Faster total completion time</li>
+                    <li>Cost/quality tradeoff options</li>
+                    <li>Independent analysis reduces bias</li>
+                    <li>Compare reasoning across model tiers</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Cook Workflow -->
+        <div class="section magenta-border">
+            <h2 class="section-title magenta">
+                <span class="icon">&#9632;</span> COOK PARALLEL SUB-AGENT WORKFLOW
+            </h2>
+
+            <div class="info-box magenta">
+                <h4>7 Specialized Sub-Agents in Parallel</h4>
+                <p>The /cook command orchestrates 7 specialized sub-agents running simultaneously for comprehensive project analysis and implementation.</p>
+            </div>
+
+            <div class="diagram-container">
+                <div class="diagram-title">// COOK PARALLEL EXECUTION //</div>
+                <div class="mermaid">
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#1a1a25', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#00ffff', 'lineColor': '#ff00ff', 'textColor': '#ffffff', 'nodeTextColor': '#ffffff' }}}%%
+flowchart TB
+    START([User runs /cook])
+
+    SUB1[Sub-Agent 1<br/>Task Type A]
+    SUB2[Sub-Agent 2<br/>Task Type B]
+    SUB3[Sub-Agent 3<br/>Task Type C]
+    SUB4[Sub-Agent 4<br/>Task Type D]
+    SUB5[Sub-Agent 5<br/>Task Type E]
+    SUB6[Sub-Agent 6<br/>Task Type F]
+    SUB7[Sub-Agent 7<br/>Task Type G]
+
+    GATHER[Gather Results]
+    INTEGRATE[Integrate Findings]
+    END([Complete])
+
+    START -.->|parallel| SUB1
+    START -.->|parallel| SUB2
+    START -.->|parallel| SUB3
+    START -.->|parallel| SUB4
+    START -.->|parallel| SUB5
+    START -.->|parallel| SUB6
+    START -.->|parallel| SUB7
+
+    SUB1 --> GATHER
+    SUB2 --> GATHER
+    SUB3 --> GATHER
+    SUB4 --> GATHER
+    SUB5 --> GATHER
+    SUB6 --> GATHER
+    SUB7 --> GATHER
+
+    GATHER --> INTEGRATE
+    INTEGRATE --> END
+
+    style START fill:#ff00ff,stroke:#ff00ff,color:#0a0a0f
+    style END fill:#ff00ff,stroke:#ff00ff,color:#0a0a0f
+    style SUB1 fill:#1a1a25,stroke:#00ffff
+    style SUB2 fill:#1a1a25,stroke:#00ffff
+    style SUB3 fill:#1a1a25,stroke:#00ffff
+    style SUB4 fill:#1a1a25,stroke:#00ffff
+    style SUB5 fill:#1a1a25,stroke:#00ffff
+    style SUB6 fill:#1a1a25,stroke:#00ffff
+    style SUB7 fill:#1a1a25,stroke:#00ffff
+                </div>
+            </div>
+
+            <div class="info-box cyan">
+                <h4>Sub-Agent Coordination</h4>
+                <ul class="feature-list">
+                    <li>Each sub-agent operates independently</li>
+                    <li>No dependencies between sub-agents</li>
+                    <li>SubagentStop hook announces completions</li>
+                    <li>Results gathered and integrated at end</li>
+                </ul>
+            </div>
+
+            <div class="info-box green">
+                <h4>Variants</h4>
+                <p><strong>/cook</strong> - Full research and implementation</p>
+                <p><strong>/cook_research_only</strong> - Analysis without code execution</p>
+            </div>
+        </div>
+
+        <!-- Orchestration Patterns -->
+        <div class="section green-border">
+            <h2 class="section-title green">
+                <span class="icon">&#9679;</span> ORCHESTRATION PATTERNS SUMMARY
+            </h2>
+
+            <div class="info-box">
+                <h4>Pattern Selection Guide</h4>
+                <p>Choose orchestration pattern based on task characteristics:</p>
+            </div>
+
+            <h3>Sequential (Ralph Pattern)</h3>
+            <div class="info-box cyan">
+                <h4>When to Use</h4>
+                <ul class="feature-list">
+                    <li>Tasks have dependencies (output → input)</li>
+                    <li>Quality gates required between steps</li>
+                    <li>Incremental commits needed</li>
+                    <li>Single cohesive artifact produced</li>
+                </ul>
+            </div>
+
+            <div class="info-box cyan">
+                <h4>Characteristics</h4>
+                <ul class="feature-list">
+                    <li><strong>Execution:</strong> One agent at a time</li>
+                    <li><strong>Speed:</strong> Slower but controlled</li>
+                    <li><strong>Quality:</strong> High (gated)</li>
+                    <li><strong>Use Cases:</strong> Feature development, refactoring</li>
+                </ul>
+            </div>
+
+            <h3>Parallel (Crypto/Cook Pattern)</h3>
+            <div class="info-box magenta">
+                <h4>When to Use</h4>
+                <ul class="feature-list">
+                    <li>Tasks are independent (no dependencies)</li>
+                    <li>Multiple perspectives valuable</li>
+                    <li>Speed is priority</li>
+                    <li>Separate outputs acceptable</li>
+                </ul>
+            </div>
+
+            <div class="info-box magenta">
+                <h4>Characteristics</h4>
+                <ul class="feature-list">
+                    <li><strong>Execution:</strong> All agents simultaneously</li>
+                    <li><strong>Speed:</strong> Fast (limited by slowest agent)</li>
+                    <li><strong>Quality:</strong> Multiple perspectives</li>
+                    <li><strong>Use Cases:</strong> Research, analysis, multi-tier reasoning</li>
+                </ul>
+            </div>
+
+            <h3>Hybrid Patterns</h3>
+            <div class="info-box green">
+                <h4>Combining Sequential & Parallel</h4>
+                <p>Advanced workflows can combine both patterns:</p>
+                <ul class="feature-list">
+                    <li><strong>Parallel → Sequential:</strong> Gather research, then implement in sequence</li>
+                    <li><strong>Sequential → Parallel:</strong> Set up architecture, then parallel implementation</li>
+                    <li><strong>Nested:</strong> Sequential outer loop with parallel inner steps</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>CLAUDE CODE BRAIN // ORCHESTRATION WORKFLOWS // Sequential & Parallel Patterns</p>
+            <p style="margin-top: 10px;"><a href="claude-brain-overview.html" style="color: var(--cyan);">← Back to Overview</a></p>
+        </div>
+    </div>
+
+    <div class="lightbox-overlay" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <div class="lightbox-content" id="lightbox-content"></div>
+        <div class="lightbox-hint">ESC or click outside to close</div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1a1a25',
+                primaryTextColor: '#ffffff',
+                primaryBorderColor: '#00ffff',
+                lineColor: '#ff00ff',
+                secondaryColor: '#12121a',
+                tertiaryColor: '#0a0a0f',
+                textColor: '#ffffff',
+                nodeTextColor: '#ffffff',
+                edgeLabelBackground: '#1a1a25',
+                clusterBkg: '#0a0a0f',
+                clusterBorder: '#00ffff',
+                titleColor: '#00ffff'
+            },
+            flowchart: {
+                nodeSpacing: 50,
+                rankSpacing: 50,
+                curve: 'basis',
+                htmlLabels: true
+            }
+        });
+
+        (function() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxContent = document.getElementById('lightbox-content');
+            const lightboxClose = document.getElementById('lightbox-close');
+
+            document.querySelectorAll('.diagram-container, .mermaid').forEach(container => {
+                container.addEventListener('click', function(e) {
+                    const clone = this.cloneNode(true);
+                    clone.style.cursor = 'default';
+                    clone.style.margin = '0';
+                    lightboxContent.innerHTML = '';
+                    lightboxContent.appendChild(clone);
+                    lightbox.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+            });
+        })();
+    </script>
+</body>
+</html>
