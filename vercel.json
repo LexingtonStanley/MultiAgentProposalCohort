@@ -37,31 +37,31 @@
     },
     {
       "source": "/ClaudesBrain",
-      "destination": "/ClaudeBrain/index.html"
+      "destination": "/ClaudesBrain/index.html"
     },
     {
       "source": "/ClaudesBrain/overview",
-      "destination": "/ClaudeBrain/claude-brain-overview.html"
+      "destination": "/ClaudesBrain/claude-brain-overview.html"
     },
     {
       "source": "/ClaudesBrain/agents",
-      "destination": "/ClaudeBrain/claude-brain-agents.html"
+      "destination": "/ClaudesBrain/claude-brain-agents.html"
     },
     {
       "source": "/ClaudesBrain/commands",
-      "destination": "/ClaudeBrain/claude-brain-commands.html"
+      "destination": "/ClaudesBrain/claude-brain-commands.html"
     },
     {
       "source": "/ClaudesBrain/skills",
-      "destination": "/ClaudeBrain/claude-brain-skills.html"
+      "destination": "/ClaudesBrain/claude-brain-skills.html"
     },
     {
       "source": "/ClaudesBrain/hooks",
-      "destination": "/ClaudeBrain/claude-brain-hooks.html"
+      "destination": "/ClaudesBrain/claude-brain-hooks.html"
     },
     {
       "source": "/ClaudesBrain/workflows",
-      "destination": "/ClaudeBrain/claude-brain-workflows.html"
+      "destination": "/ClaudesBrain/claude-brain-workflows.html"
     }
   ]
 }
