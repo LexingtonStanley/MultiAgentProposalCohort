@@ -34,34 +34,6 @@
     {
       "source": "/system-design",
       "destination": "/cohort-system-design.html"
-    },
-    {
-      "source": "/ClaudesBrain",
-      "destination": "/ClaudesBrain/index.html"
-    },
-    {
-      "source": "/ClaudesBrain/overview",
-      "destination": "/ClaudesBrain/claude-brain-overview.html"
-    },
-    {
-      "source": "/ClaudesBrain/agents",
-      "destination": "/ClaudesBrain/claude-brain-agents.html"
-    },
-    {
-      "source": "/ClaudesBrain/commands",
-      "destination": "/ClaudesBrain/claude-brain-commands.html"
-    },
-    {
-      "source": "/ClaudesBrain/skills",
-      "destination": "/ClaudesBrain/claude-brain-skills.html"
-    },
-    {
-      "source": "/ClaudesBrain/hooks",
-      "destination": "/ClaudesBrain/claude-brain-hooks.html"
-    },
-    {
-      "source": "/ClaudesBrain/workflows",
-      "destination": "/ClaudesBrain/claude-brain-workflows.html"
     }
   ]
 }
