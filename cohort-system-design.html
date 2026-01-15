@@ -400,8 +400,8 @@
         }
 
         .lightbox-content {
-            max-width: 95%;
-            max-height: 95%;
+            max-width: 95vw;
+            max-height: 95vh;
             overflow: auto;
             background: var(--bg-card);
             border: 1px solid var(--cyan);
@@ -412,9 +412,11 @@
             position: relative;
         }
 
-        .lightbox-content .mermaid {
-            transform: scale(1.2);
-            transform-origin: center center;
+        .lightbox-content .mermaid,
+        .lightbox-content .diagram-container {
+            transform: scale(2);
+            transform-origin: top center;
+            margin-bottom: 50%;
         }
 
         .lightbox-close {
